@@ -1,101 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>glocean</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Glocean</title>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="icon" type="image/svg+xml" id="favicon" href="/favicon.svg">
+  <meta name="theme-color" content="#191724" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#faf4ed" media="(prefers-color-scheme: light)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root, [data-theme="dark"] {
+      --base:    #191724;
+      --text:    #e0def4;
+      --muted:   #908caa;
+      --subtle:  #6e6a86;
+      --hi:      #e0def4;
+    }
+    [data-theme="light"] {
+      --base:    #faf4ed;
+      --text:    #575279;
+      --muted:   #797593;
+      --subtle:  #9893a5;
+      --hi:      #575279;
     }
 
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       overflow: hidden;
-      background: #191724;
+      background: var(--base);
     }
 
     .scene {
-      width: 100vw;
-      height: 100vh;
+      width: 100vw; height: 100vh;
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
+    canvas#c { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-    .center {
-      text-align: center;
-      
-      z-index: 10;
-      position: relative;
-    }
+    .center { text-align: center; z-index: 10; position: relative; }
 
     .center h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(62px, 9.5vw, 120px);
-      font-weight: 600;
-      color: #e0def4;
-      letter-spacing: 0.12em;
-      margin-bottom: 28px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(54px, 9vw, 116px);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.04em;
+      margin-bottom: 30px;
     }
 
     .links {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px;
     }
-
     .links a {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(15px, 1.85vw, 22px);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(13px, 1.7vw, 17px);
       font-weight: 400;
-      color: #b8b4d0;
+      color: var(--muted);
       text-decoration: none;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.02em;
       transition: color 0.25s ease;
     }
-
-    .links a:hover {
-      color: #e0def4;
-    }
-
+    .links a:hover { color: var(--text); }
     .dot {
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: #c8c5de;
-      flex-shrink: 0;
+      width: 3px; height: 3px; border-radius: 50%;
+      background: var(--subtle); flex-shrink: 0;
     }
+
+    .toggle {
+      position: fixed; top: 22px; right: 24px;
+      z-index: 20;
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      background: transparent; border: none;
+      color: var(--muted); cursor: pointer;
+      border-radius: 50%;
+      transition: color 0.25s ease, background 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .toggle:hover { color: var(--text); background: color-mix(in srgb, var(--text) 8%, transparent); }
+    .toggle:focus-visible { outline: 2px solid var(--subtle); outline-offset: 2px; }
+    .toggle svg { width: 21px; height: 21px; position: absolute; transition: transform 0.5s cubic-bezier(.5,1.4,.5,1), opacity 0.35s ease; }
+    .toggle .sun  { transform: rotate(-90deg) scale(0.4); opacity: 0; }
+    .toggle .moon { transform: rotate(0deg) scale(1);      opacity: 1; }
+    [data-theme="light"] .toggle .sun  { transform: rotate(0deg) scale(1);     opacity: 1; }
+    [data-theme="light"] .toggle .moon { transform: rotate(90deg) scale(0.4);  opacity: 0; }
   </style>
 </head>
 <body>
   <div class="scene">
     <canvas id="c"></canvas>
+
+    <button class="toggle" id="themeBtn" aria-label="Toggle light / dark theme" title="Toggle theme">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+      </svg>
+    </button>
+
     <div class="center">
-      <h1>glocean</h1>
+      <h1>Glocean</h1>
       <div class="links">
         <a href="/about">about</a>
         <div class="dot"></div>
         <a href="/blog">blog</a>
-        <div class="dot"></div>
-        <a href="/garden">garden</a>
         <div class="dot"></div>
         <a href="/projects">projects</a>
       </div>
@@ -103,110 +128,172 @@
   </div>
 
   <script>
+  (function () {
+    const root = document.documentElement;
+    const stored = localStorage.getItem('theme');
+    const sysDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function applyTheme(t) {
+      root.setAttribute('data-theme', t);
+      paletteName = t;
+      var fav = document.getElementById('favicon');
+      if (fav) {
+        var base = (fav.getAttribute('href') || '/favicon.svg').replace(/favicon(-light)?\.svg.*$/, '');
+        fav.setAttribute('href', base + (t === 'light' ? 'favicon-light.svg' : 'favicon.svg'));
+      }
+    }
+    let paletteName = root.getAttribute('data-theme') || 'dark';
+    applyTheme(paletteName);
+
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', next);
+      applyTheme(next);
+    });
+    sysDark.addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light');
+    });
+
     const canvas = document.getElementById('c');
     const ctx = canvas.getContext('2d');
+    const buf = document.createElement('canvas');
+    const bctx = buf.getContext('2d');
 
-    const COLORS = ['#eb6f92','#f6c177','#ebbcba','#31748f','#9ccfd8','#c4a7e7'];
+    const PALETTES = {
+      dark:  { colors: ['#eb6f92','#9ccfd8','#f6c177','#31748f','#c4a7e7'], base: '#191724' },
+      light: { colors: ['#b4637a','#56949f','#ea9d34','#286983','#907aa9'], base: '#faf4ed' }
+    };
 
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
     function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      for (const cv of [canvas, buf]) {
+        cv.width  = Math.floor(window.innerWidth  * dpr);
+        cv.height = Math.floor(window.innerHeight * dpr);
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const pl = Math.min(window.innerWidth, window.innerHeight) * 0.46;
+      flowers.forEach(f => f.petalLength = pl);
     }
-    resize();
-    window.addEventListener('resize', resize);
 
-    function easeOut(t) {
-      return 1 - Math.pow(1 - t, 3);
-    }
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
 
     class Flower {
-      constructor(corner, numPetals, colorOffset = 0) {
+      constructor(corner, numPetals, colorOffset) {
         this.corner = corner;
         this.numPetals = numPetals;
         this.colorOffset = colorOffset;
         this.petalLength = Math.min(window.innerWidth, window.innerHeight) * 0.46;
         this.progress = 0;
-        this.rotation = 0;
-        this.spinSpeed = 0.0013;
-        this.unravelSpeed = 0.003;
         this.unraveling = true;
         this.startAngle = -Math.PI / 2;
         this.angleOffset = corner === 'br' ? Math.PI : 0;
       }
-
       getPos() {
         if (this.corner === 'tl') return [-10, -10];
         return [window.innerWidth + 10, window.innerHeight + 10];
       }
-
-      drawPetal(cx, cy, angle, color) {
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(angle);
-
-        const pl = this.petalLength;
-        const pw = pl * 0.22;
-
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(-pw, -pl * 0.3, -pw * 0.4, -pl * 0.75, 0, -pl);
-        ctx.bezierCurveTo(pw * 0.4, -pl * 0.75, pw, -pl * 0.3, 0, 0);
-
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.88;
-        ctx.fill();
-        ctx.restore();
+      update(elapsed) {
+        this.progress = Math.min(1, elapsed / 5500);
       }
-
-      update() {
-        if (this.unraveling) {
-          this.progress = Math.min(1, this.progress + this.unravelSpeed);
-          if (this.progress >= 1) this.unraveling = false;
-        }
-        this.rotation += this.spinSpeed;
+      petalPath(g, angle) {
+        g.save();
+        g.rotate(angle);
+        const pl = this.petalLength, pw = pl * 0.22;
+        g.moveTo(0, 0);
+        g.bezierCurveTo(-pw, -pl * 0.3, -pw * 0.4, -pl * 0.75, 0, -pl);
+        g.bezierCurveTo(pw * 0.4, -pl * 0.75, pw, -pl * 0.3, 0, 0);
+        g.closePath();
+        g.restore();
       }
-
-      draw() {
+      drawPetal(g, angle, color) {
+        g.beginPath();
+        this.petalPath(g, angle);
+        g.fillStyle = color;
+        g.fill();
+        g.lineJoin = 'round';
+        g.lineWidth = this.petalLength * 0.013;
+        g.strokeStyle = PALETTES[paletteName].base;
+        g.stroke();
+      }
+      draw(rotation) {
+        const pal = PALETTES[paletteName];
         const [cx, cy] = this.getPos();
-        const easedProgress = easeOut(this.progress);
+        const eased = easeOut(this.progress);
 
-        for (let i = 0; i < this.numPetals; i++) {
-          const finalAngle = (i / this.numPetals) * Math.PI * 2;
-          const angle = this.startAngle + (finalAngle - this.startAngle) * easedProgress + this.rotation + this.angleOffset;
-          const color = COLORS[(i + this.colorOffset) % COLORS.length];
-          this.drawPetal(cx, cy, angle, color);
+        bctx.save();
+        bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        bctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        bctx.translate(cx, cy);
+        const angleAt = i => this.startAngle +
+          ((i / this.numPetals) * Math.PI * 2 - this.startAngle) * eased +
+          rotation + this.angleOffset;
+        const colorAt = i => pal.colors[(i + this.colorOffset) % pal.colors.length];
+        const n = this.numPetals;
+        const clipOutNext = i => {
+          bctx.beginPath();
+          bctx.rect(-1e5, -1e5, 2e5, 2e5);
+          this.petalPath(bctx, angleAt((i + 1) % n));
+          bctx.clip('evenodd');
+        };
+        for (let i = 0; i < n; i++) {
+          bctx.save();
+          clipOutNext(i);
+          bctx.beginPath();
+          this.petalPath(bctx, angleAt(i));
+          bctx.fillStyle = colorAt(i);
+          bctx.fill();
+          bctx.restore();
         }
+        bctx.lineJoin = 'round';
+        bctx.lineWidth = this.petalLength * 0.013;
+        bctx.strokeStyle = pal.base;
+        for (let i = 0; i < n; i++) {
+          bctx.save();
+          clipOutNext(i);
+          bctx.beginPath();
+          this.petalPath(bctx, angleAt(i));
+          bctx.stroke();
+          bctx.restore();
+        }
+        bctx.beginPath();
+        bctx.arc(0, 0, 9, 0, Math.PI * 2);
+        bctx.fillStyle = pal.base;
+        bctx.fill();
+        bctx.restore();
 
         ctx.save();
-        ctx.translate(cx, cy);
-        ctx.beginPath();
-        ctx.arc(0, 0, 8, 0, Math.PI * 2);
-        ctx.fillStyle = '#191724';
-        ctx.globalAlpha = 1;
-        ctx.fill();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalAlpha = 0.9;
+        ctx.drawImage(buf, 0, 0);
         ctx.restore();
       }
     }
 
-    const flowers = [
-      new Flower('tl', 10, 0),
-      new Flower('br', 10, 3)
-    ];
+    const flowers = [ new Flower('tl', 10, 0), new Flower('br', 10, 3) ];
+    resize();
+    window.addEventListener('resize', resize);
 
-    window.addEventListener('resize', () => {
-      flowers.forEach(f => {
-        f.petalLength = Math.min(window.innerWidth, window.innerHeight) * 0.46;
-      });
-    });
+    let rotation = 0;
+    const SPIN = 0.078;
 
-    function loop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.globalAlpha = 1;
-      flowers.forEach(f => { f.update(); f.draw(); });
+    const start = performance.now();
+    let last = start;
+    function loop(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      rotation += SPIN * dt;
+
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      for (const f of flowers) {
+        f.update(now - start);
+        f.draw(rotation);
+      }
       requestAnimationFrame(loop);
     }
-
-    loop();
+    requestAnimationFrame(loop);
+  })();
   </script>
 </body>
 </html>

@@ -1,20 +1,7 @@
-# macOS
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Editor directories and files
 .vscode/
 .idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
 *.sw?
-
-# Logs
 *.log
-
-# Local env files
 .env
 .env.local

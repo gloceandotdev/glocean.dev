@@ -1,81 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>glocean - projects</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects · Glocean</title>
+  <script>(function(){try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="icon" type="image/svg+xml" id="favicon" href="../favicon.svg">
+  <meta name="theme-color" content="#191724" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#faf4ed" media="(prefers-color-scheme: light)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #191724;
-    }
-
-    .scene {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .center {
-      text-align: center;
-      z-index: 10;
-      position: relative;
-    }
-
-    .center h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(62px, 9.5vw, 120px);
-      font-weight: 600;
-      color: #e0def4;
-      letter-spacing: 0.12em;
-      margin-bottom: 16px;
-    }
-
-    .subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(14px, 1.6vw, 20px);
-      font-weight: 400;
-      color: #6e6a86;
-      letter-spacing: 0.08em;
-      margin-bottom: 28px;
-    }
-
-    .back {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(13px, 1.5vw, 18px);
-      font-weight: 400;
-      color: #b8b4d0;
-      text-decoration: none;
-      letter-spacing: 0.06em;
-      transition: color 0.25s ease;
-    }
-
-    .back:hover {
-      color: #e0def4;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
-  <div class="scene">
-    <div class="center">
-      <h1>WIP</h1>
-      <a class="back" href="/">← home</a>
-    </div>
+<body data-page="projects">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="content">
+      <div class="content-inner wide">
+        <div class="crumb">~/projects/</div>
+        <h1 class="page-title">Things I've built</h1>
+        <p class="lede">All of my projects, big and small. Click the cards to go to the repo.</p>
+
+        <div class="card-grid">
+
+          <div class="pcard">
+            <a class="cover" href="https://github.com/gloceandotdev/dotfiles" aria-label="Open dotfiles"></a>
+            <img src="../assets/proj-dotfiles.webp" alt="dotfiles screenshot">
+            <div class="body">
+              <div class="head">
+                <h2 class="ptitle">dotfiles</h2>
+                <span class="go">↗</span>
+              </div>
+              <p class="pdesc">Minimal macOS dotfiles with automatic light/dark mode switching.</p>
+              <div class="tags"><span class="tag">Shell</span></div>
+            </div>
+          </div>
+
+          <div class="pcard">
+            <a class="cover" href="https://github.com/gloceandotdev/iris-rockbox-theme" aria-label="Open iris-rockbox-theme"></a>
+            <img src="../assets/proj-iris.webp" alt="iris-rockbox-theme screenshot">
+            <div class="body">
+              <div class="head">
+                <h2 class="ptitle">iris-rockbox-theme</h2>
+                <span class="go">↗</span>
+              </div>
+              <p class="pdesc">A clean Rosé Pine theme for Rockbox that does not use any beatmaps.</p>
+              <div class="tags"><span class="tag">Markup</span></div>
+            </div>
+          </div>
+
+          <div class="pcard">
+            <a class="cover" href="https://github.com/gloceandotdev/.emacs.d" aria-label="Open .emacs.d"></a>
+            <img src="../assets/proj-emacs.webp" alt=".emacs.d screenshot">
+            <div class="body">
+              <div class="head">
+                <h2 class="ptitle">.emacs.d</h2>
+                <span class="go">↗</span>
+              </div>
+              <p class="pdesc">Elegant, no-distraction Emacs configuration with evil-mode and a custom Rosé Pine theme.</p>
+              <div class="tags"><span class="tag">Emacs Lisp</span></div>
+            </div>
+          </div>
+
+          <div class="pcard">
+            <a class="cover" href="https://github.com/gloceandotdev/glocean.dev" aria-label="Open glocean.dev"></a>
+            <img src="../assets/proj-glocean.webp" alt="glocean.dev screenshot">
+            <div class="body">
+              <div class="head">
+                <h2 class="ptitle">glocean.dev</h2>
+                <span class="go">↗</span>
+              </div>
+              <p class="pdesc">A framework-free personal site in vanilla HTML, CSS, and JS.</p>
+              <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
   </div>
+  <script src="../js/flower.js"></script>
+  <script src="../js/site.js"></script>
 </body>
 </html>

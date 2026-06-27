@@ -1,81 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>glocean - blog</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog · Glocean</title>
+  <script>(function(){try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="icon" type="image/svg+xml" id="favicon" href="../favicon.svg">
+  <meta name="theme-color" content="#191724" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#faf4ed" media="(prefers-color-scheme: light)">
+  <link rel="alternate" type="application/rss+xml" title="Glocean — Blog" href="/feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #191724;
-    }
-
-    .scene {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .center {
-      text-align: center;
-      z-index: 10;
-      position: relative;
-    }
-
-    .center h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(62px, 9.5vw, 120px);
-      font-weight: 600;
-      color: #e0def4;
-      letter-spacing: 0.12em;
-      margin-bottom: 16px;
-    }
-
-    .subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(14px, 1.6vw, 20px);
-      font-weight: 400;
-      color: #6e6a86;
-      letter-spacing: 0.08em;
-      margin-bottom: 28px;
-    }
-
-    .back {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(13px, 1.5vw, 18px);
-      font-weight: 400;
-      color: #b8b4d0;
-      text-decoration: none;
-      letter-spacing: 0.06em;
-      transition: color 0.25s ease;
-    }
-
-    .back:hover {
-      color: #e0def4;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
-  <div class="scene">
-    <div class="center">
-      <h1>WIP</h1>
-      <a class="back" href="/">← home</a>
-    </div>
+<body data-page="blog">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="content left">
+      <canvas class="flower-canvas" data-corner="tr" data-color-offset="0"></canvas>
+      <div class="content-inner medium">
+        <div class="crumb">~/blog/</div>
+        <h1 class="page-title">Personal Blog</h1>
+        <p class="lede">My experience and thoughts on software, macOS, Emacs, or whatever rabbit hole I fall down at that time.</p>
+
+        <div class="empty-state">
+          <p>No posts yet :(</p>
+        </div>
+      </div>
+    </main>
   </div>
+  <script src="../js/flower.js"></script>
+  <script src="../js/site.js"></script>
 </body>
 </html>
