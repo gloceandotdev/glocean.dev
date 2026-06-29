@@ -30,15 +30,21 @@
     sun: '<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>'
   };
 
-  var INDEX = [
+  var PAGES = [
     { title: 'About',   sub: 'Who I am · /about',          url: '/about' },
     { title: 'Blog',    sub: 'Writing & notes · /blog',    url: '/blog' },
-    { title: 'Projects',sub: "Things I've built · /projects", url: '/projects' },
+    { title: 'Projects',sub: "Things I've built · /projects", url: '/projects' }
+  ];
+  var PROJECTS = [
     { title: 'dotfiles',           sub: 'Project · Shell',         url: GITHUB + '/dotfiles' },
     { title: 'iris-rockbox-theme', sub: 'Project · Rockbox theme', url: GITHUB + '/iris-rockbox-theme' },
     { title: '.emacs.d',           sub: 'Project · Emacs Lisp',    url: GITHUB + '/.emacs.d' },
     { title: 'glocean.dev',        sub: 'Project · HTML/CSS/JS',   url: GITHUB + '/glocean.dev' }
   ];
+  var POSTS = (window.BLOG_POSTS || []).map(function (p) {
+    return { title: p.title, sub: 'Blog post · ' + p.date, url: p.url };
+  });
+  var INDEX = PAGES.concat(POSTS, PROJECTS);
 
   function navItem(id, label, dotClass, href, active) {
     return '<a class="nav-item' + (active === id ? ' active' : '') + '" href="' + href + '">' +
@@ -159,10 +165,30 @@
     window.initCornerFlower(fc, theme, { corner: corner, colorOffset: co });
   }
 
+  function initTagFilter() {
+    var bar = document.querySelector('.tag-filter');
+    if (!bar) return;
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.post-row'));
+    var chips = Array.prototype.slice.call(bar.querySelectorAll('.tagchip'));
+    function apply(tag) {
+      rows.forEach(function (r) {
+        var tags = (r.getAttribute('data-tags') || '').split(/\s+/);
+        r.hidden = !!tag && tags.indexOf(tag) < 0;
+      });
+      chips.forEach(function (c) { c.classList.toggle('active', (c.getAttribute('data-tag') || '') === tag); });
+      history.replaceState(null, '', tag ? '?tag=' + encodeURIComponent(tag) : location.pathname);
+    }
+    chips.forEach(function (c) {
+      c.addEventListener('click', function () { apply(c.getAttribute('data-tag') || ''); });
+    });
+    apply(new URLSearchParams(location.search).get('tag') || '');
+  }
+
   function boot() {
     buildSidebar();
     buildSearch();
     initFlower();
+    initTagFilter();
     updateFavicon(theme());
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
