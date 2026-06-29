@@ -147,7 +147,8 @@
 
     document.getElementById('themeBtn').addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', next);
+      if (next === (sysDark.matches ? 'dark' : 'light')) localStorage.removeItem('theme');
+      else localStorage.setItem('theme', next);
       applyTheme(next);
     });
     sysDark.addEventListener('change', (e) => {

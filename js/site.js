@@ -70,7 +70,8 @@
     var tt = document.getElementById('themeToggle');
     if (tt) tt.addEventListener('click', function () {
       var next = theme() === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', next);
+      if (next === (sys.matches ? 'dark' : 'light')) localStorage.removeItem('theme');
+      else localStorage.setItem('theme', next);
       applyTheme(next);
     });
 
