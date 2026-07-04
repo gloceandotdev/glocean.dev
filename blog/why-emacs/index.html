@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Emacs? · Glocean</title>
+  <script>(function(){try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="icon" type="image/svg+xml" id="favicon" href="../../favicon.svg">
+  <meta name="theme-color" content="#191724" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#faf4ed" media="(prefers-color-scheme: light)">
+  <meta name="description" content="Why the hell would anyone want to run a 40-year-old editor, with evil-mode on top too? Why not just Neovim?">
+  <link rel="alternate" type="application/rss+xml" title="Glocean — Blog" href="/feed.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body data-page="blog">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="content">
+      <article class="content-inner narrow">
+        <a class="back-link" href="/blog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back to blog</a>
+        <h1 class="post-head-title">Why Emacs?</h1>
+        <div class="post-meta">
+          <span class="date">Jul 4, 2026</span>
+          <span class="sep"></span>
+          <span class="read">6 min read</span>
+          <span class="sep"></span>
+          <span class="meta-tags"><a class="meta-tag" href="/blog?tag=emacs">emacs</a></span>
+        </div>
+        <div class="prose">
+<div id="outline-container-org1157e58" class="outline-2">
+<h2 id="org1157e58">The short version</h2>
+<div class="outline-text-2" id="text-org1157e58">
+<p>
+Every now and then I get asked the same question. If I am using Emacs with evil-mode, why not just use regular Neovim? It starts in 1/10th of the time, runs much smoother, and can do most of what Emacs can anyways. This is a fair question that deserves an actual answer, so here is my view on it.
+</p>
+
+<p>
+In short, I do not use Emacs because it's a good text editor. Out of the box it is incredibly bad, borderline unusable for most even. I use it because it is a live Lisp environment that happens to also have a text editor. Because of this, you can reshape Emacs into <i>anything</i> you can imagine; going back to a normal text editor after this feels like losing a limb.
+</p>
+
+<p>
+Now obviously it is much more nuanced than that, so I will first start with the weaknesses of Emacs, pretending that it is perfect would be a lie and a disappointment for those who want to try it out.
+</p>
+</div>
+</div>
+<div id="outline-container-org6daf2ba" class="outline-2">
+<h2 id="org6daf2ba">What is actually bad about Emacs?</h2>
+<div class="outline-text-2" id="text-org6daf2ba">
+</div>
+<div id="outline-container-orgbd6ec23" class="outline-3">
+<h3 id="orgbd6ec23">It is heavy and slow</h3>
+<div class="outline-text-3" id="text-orgbd6ec23">
+<p>
+Emacs is primarily single-threaded. When something heavy is going on, like an LSP server or a package compiling, it can take a while or even lock up the editor completely. Modern Emacs has native compilation, and running it as a daemon with <code>emacsclient</code> does make the startup instantaneous, but the underlying infrastructure is still old and slow and you can feel it occasionally. 
+</p>
+</div>
+</div>
+<div id="outline-container-org0726398" class="outline-3">
+<h3 id="org0726398">The defaults are hostile</h3>
+<div class="outline-text-3" id="text-org0726398">
+<p>
+A fresh Emacs feels incredibly bad to use. The keybindings are unintuitive, no autocompletion, no modern UI, nothing. The editor only becomes good when you put serious work into it, or use a distribution like Doom Emacs or Spacemacs. My own <code>init.el</code> is about a thousand lines long, and that is after careful pruning too. This is a genuine issue, which results in most people not even giving Emacs a fair shot due to the hostility. Some progress has been made, like the inclusion of tree-sitter and Eglot by default, but it still nowhere close to being beginner-friendly.
+</p>
+</div>
+</div>
+<div id="outline-container-org6cf4c25" class="outline-3">
+<h3 id="org6cf4c25">Configuring Emacs is a full-time job</h3>
+<div class="outline-text-3" id="text-org6cf4c25">
+<p>
+Tuning Emacs is incredibly fun, and it being "fun" is the trap. Instead of actually getting the basics done and using the editor, you end up spending weeks configuring your dashboard and making a custom logo for it (whoops, this is exactly what I ended up doing). If you do not enjoy tinkering and would rather use an editor with usable defaults, then Emacs is probably not for you.
+</p>
+</div>
+</div>
+<div id="outline-container-org0410ad4" class="outline-3">
+<h3 id="org0410ad4">Terminal Emacs is not worth it</h3>
+<div class="outline-text-3" id="text-org0410ad4">
+<p>
+It works, but Emacs really wants a GUI frame. If most of your work consists of SSH-ing into servers and editing there in a bare terminal, then Vim wins no questions asked.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf47a74e" class="outline-2">
+<h2 id="orgf47a74e">The things no other editor can do</h2>
+<div class="outline-text-2" id="text-orgf47a74e">
+<p>
+If the above tradeoffs sound disqualifying, they might be, for you. Here is the other side.
+</p>
+</div>
+<div id="outline-container-org7d6e646" class="outline-3">
+<h3 id="org7d6e646">The editor is a REPL</h3>
+<div class="outline-text-3" id="text-org7d6e646">
+<p>
+This is the biggest strength of Emacs, and it's hard to appreciate until you have actually used it. Every single function that makes up the editor is visible and documented, and also redefinable from inside a running session. If there is something I don't like, I can just edit the function, evaluate the buffer, and the change is live. No restarting or reloading needed at all. My config even has <code>SPC b e</code> bound to eval the buffer just for this, quick and easy. No other editor behaves like this.
+</p>
+</div>
+</div>
+<div id="outline-container-org251ae64" class="outline-3">
+<h3 id="org251ae64">Org mode</h3>
+<div class="outline-text-3" id="text-org251ae64">
+<p>
+If I had to defend Emacs with a single feature it would have to be this. Org isn't just a markdown clone like many think it is. It is an agenda and a task manager, a literate programming system that lets you run code inline, a note graph through org-roam, a LaTeX environment that previews rendered math right in the buffer, and an export engine that transforms your text into html, pdf, docx, <i>anything</i>. This very post has been written in org mode and transformed to html too! There really is no close equivalent, there is so much more that org mode can do that I did not cover. People have tried to port org mode to other editors, but those don't even capture maybe 10% of it.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf56e9bf" class="outline-3">
+<h3 id="orgf56e9bf">Magit</h3>
+<div class="outline-text-3" id="text-orgf56e9bf">
+<p>
+Easily the best git interface out there, even compared to those outside of Emacs. A lot of people run Emacs purely for Magit and do their code editing elsewhere.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcf949a8" class="outline-3">
+<h3 id="orgcf949a8">Everything is the same buffer</h3>
+<div class="outline-text-3" id="text-orgcf949a8">
+<p>
+My IRC client, terminal, file manager, git tool, notes, calendar, code, they are all buffers and they all obey the same motions, window management, and search. All you need to learn is one set of movements and keybinds and they will all work across any buffer in Emacs. All your apps use the exact same navigation. This is only possible because Emacs is a <i>platform</i>, not an editor with a bunch of plugins.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge6a88b2" class="outline-2">
+<h2 id="orge6a88b2">So, why not just Vim?</h2>
+<div class="outline-text-2" id="text-orge6a88b2">
+<p>
+I get this question because people always misunderstand what evil-mode actually is. 
+</p>
+
+<p>
+Vim's greatest strength is its modal editing. It lets you type how you think instead of just clicking and editing. <code>3dd</code>, <code>daw</code>, <code>ci"</code>, it's like a language with grammar and it's, in my opinion, the best way to write text for everyone, not just programmers. Evil mode is the most faithful re-implementation of this system I have ever seen, and some argue it is better than Vim itself.
+</p>
+
+<p>
+And this is the most important distinction to make, the difference between Vim and Emacs isn't the editing, it's the platform. Emacs is the platform I prefer, I chose a 40-year-old Elisp machine and kept Vim's editing. I layered an interface I love on a platform I love, you cannot do the same the other way around (like implementing org-mode in Vim).
+</p>
+
+<p>
+And honestly Neovim in 2026 is seriously great. Lua is a great language, and treesitter and LSP support is built in (just like Emacs, but implemented better in my opinion). It also has great plugins like telescope and neorg, and is much much faster compared to Emacs. If my needs were a "fast, light editor with sane defaults" then I would be using Neovim, and if you think you fall in this category too then by all means go use Neovim instead. But the strengths of Emacs heavily tip the scale to the other side for me.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd810d5d" class="outline-2">
+<h2 id="orgd810d5d">Conclusion</h2>
+<div class="outline-text-2" id="text-orgd810d5d">
+<p>
+Why Emacs? Because I want Vim's editing, apps that follow the same rules, org-mode's everything, and a uniform and moddable Lisp environment to hold it all. Emacs is the only place where all of this can be done at once. The price you pay is a heavier, slower, and clunkier editor that you have to heavily configure yourself. For what I do and the way my head works, the tradeoffs are well worth it. For many people it is not, and that's completely reasonable. The point of this blog wasn't to convince you to use Emacs or how Emacs is the best editor, the point was to clarify some misconceptions people have about Emacs and why I personally value it so much.
+</p>
+</div>
+</div>
+        </div>
+        
+      </article>
+    </main>
+  </div>
+  <script src="../../js/flower.js"></script>
+  <script src="../../js/posts.js"></script>
+  <script src="../../js/site.js"></script>
+</body>
+</html>

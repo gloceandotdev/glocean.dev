@@ -1,1 +1,1 @@
-window.BLOG_POSTS = [];
+window.BLOG_POSTS = [{"title":"Why Emacs?","date":"Jul 4, 2026","url":"/blog/why-emacs","slug":"why-emacs","read":"6 min read","excerpt":"Why the hell would anyone want to run a 40-year-old editor, with evil-mode on top too? Why not just Neovim?","tags":["emacs"]}];
