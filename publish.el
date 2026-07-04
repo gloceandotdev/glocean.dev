@@ -127,10 +127,9 @@
   <title>%s · Glocean</title>
   <script>(function(){try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel=\"icon\" type=\"image/svg+xml\" id=\"favicon\" href=\"../../favicon.svg\">
-  <meta name=\"theme-color\" content=\"#191724\" media=\"(prefers-color-scheme: dark)\">
-  <meta name=\"theme-color\" content=\"#faf4ed\" media=\"(prefers-color-scheme: light)\">
+  <meta name=\"theme-color\" content=\"#c4a7e7\">
   <meta name=\"description\" content=\"%s\">
-  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Glocean — Blog\" href=\"/feed.xml\">
+  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Glocean · Blog\" href=\"/feed.xml\">
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
   <link href=\"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap\" rel=\"stylesheet\">
@@ -269,10 +268,10 @@
      (concat
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
       "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n"
-      "  <title>Glocean — Blog</title>\n"
+      "  <title>Glocean · Blog</title>\n"
       (format "  <link>%s/blog</link>\n" gl-site-url)
       (format "  <atom:link href=\"%s/feed.xml\" rel=\"self\" type=\"application/rss+xml\"/>\n" gl-site-url)
-      "  <description>Writing &amp; notes by Glocean.</description>\n"
+      "  <description>Glocean's personal blog</description>\n"
       "  <language>en</language>\n"
       (format "  <lastBuildDate>%s</lastBuildDate>\n" (gl-rfc822 (current-time)))
       (mapconcat #'gl-rss-item posts "")
