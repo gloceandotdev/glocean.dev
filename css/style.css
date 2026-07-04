@@ -91,6 +91,20 @@ body {
 .org-list li { position: relative; padding-left: 20px; font-size: 16px; line-height: 1.7; color: var(--text); max-width: 62ch; }
 .org-list li::before { content: "-"; position: absolute; left: 0; top: 0; color: var(--subtle); }
 
+.badge-intro { font-size: 15px; line-height: 1.7; color: var(--muted); margin: 0 0 18px; }
+.badge-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 24px; }
+.badge-row > a { display: flex; flex: none; }
+.badge-copy {
+  font-family: inherit; font-size: 11px; font-weight: 500; color: var(--p5);
+  background: color-mix(in srgb, var(--p5) 14%, transparent); border: none; border-radius: 6px;
+  padding: 5px 10px; cursor: pointer; flex: none; transition: background .18s;
+}
+.badge-copy:hover { background: color-mix(in srgb, var(--p5) 24%, transparent); }
+.friends-label { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--subtle); margin: 0 0 12px; }
+.badge-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.badge-grid a { display: flex; flex: none; }
+.badge-grid img { display: block; }
+
 .empty-state { margin-top: 34px; padding: 40px 0; border-top: 1px solid color-mix(in srgb, var(--text) 11%, transparent); }
 .empty-state p { margin: 0; font-size: 15px; line-height: 1.7; color: var(--subtle); }
 .post-list { display: flex; flex-direction: column; }

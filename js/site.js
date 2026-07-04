@@ -165,6 +165,18 @@
     window.initCornerFlower(fc, theme, { corner: corner, colorOffset: co });
   }
 
+  function initBadgeCopy() {
+    var btn = document.getElementById('badgeCopy');
+    if (!btn) return;
+    var snippet = '<a href="https://glocean.dev"><img src="https://glocean.dev/badge.png" width="88" height="31"></a>';
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(snippet).then(function () {
+        btn.textContent = 'copied!';
+        setTimeout(function () { btn.textContent = 'copy'; }, 1500);
+      });
+    });
+  }
+
   function initTagFilter() {
     var bar = document.querySelector('.tag-filter');
     if (!bar) return;
@@ -188,6 +200,7 @@
     buildSidebar();
     buildSearch();
     initFlower();
+    initBadgeCopy();
     initTagFilter();
     updateFavicon(theme());
   }

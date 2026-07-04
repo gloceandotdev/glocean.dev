@@ -16,7 +16,6 @@
   <div class="layout">
     <aside class="sidebar" id="sidebar"></aside>
     <main class="content">
-      <canvas class="flower-canvas" data-corner="br" data-color-offset="3"></canvas>
       <div class="content-inner narrow">
         <div class="crumb">~/about.org</div>
         <h1 class="page-title">Hey, I'm Glocean</h1>
@@ -36,10 +35,22 @@
           <li>Highly configured macOS with Yabai and Sketchybar</li>
           <li>Many self-hosted services with Docker, such as the *arr stack for media</li>
         </ul>
+
+        <h2 class="org-h">BADGES</h2>
+        <p class="badge-intro">This site is 88×31 compatible. Grab mine, send me yours.</p>
+
+        <div class="badge-row">
+          <a href="https://glocean.dev"><img src="/badge.png" srcset="/badge-2x.png 2x" width="88" height="31" alt="glocean.dev"></a>
+          <button class="badge-copy" type="button" id="badgeCopy">copy</button>
+        </div>
+
+        <div class="friends-label">FRIENDS</div>
+        <div class="badge-grid">
+          <a href="https://blog.amilie.dev" target="_blank" rel="noopener"><img src="/assets/badge-amilie.gif" width="88" height="31" alt="blog.amilie.dev"></a>
+        </div>
       </div>
     </main>
   </div>
-  <script src="../js/flower.js"></script>
   <script src="../js/posts.js"></script>
   <script src="../js/site.js"></script>
 </body>
