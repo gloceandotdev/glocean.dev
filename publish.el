@@ -152,6 +152,7 @@
         </div>
         %s
       </article>
+      <div class=\"flower-footer\"><canvas class=\"flower-canvas\" data-corner=\"bottom\" data-color-offset=\"3\"></canvas></div>
     </main>
   </div>
   <script src=\"../../js/flower.js\"></script>

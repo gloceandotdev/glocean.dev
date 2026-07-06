@@ -162,7 +162,12 @@
     if (!fc || !window.initCornerFlower) return;
     var corner = fc.getAttribute('data-corner') || 'br';
     var co = parseInt(fc.getAttribute('data-color-offset') || '3', 10);
-    window.initCornerFlower(fc, theme, { corner: corner, colorOffset: co });
+    var op = fc.getAttribute('data-opacity');
+    window.initCornerFlower(fc, theme, {
+      corner: corner,
+      colorOffset: co,
+      opacity: op != null ? parseFloat(op) : undefined
+    });
   }
 
   function initBadgeCopy() {
