@@ -105,7 +105,7 @@
     (if (null tags) ""
       (concat "\n          <span class=\"sep\"></span>\n          <span class=\"meta-tags\">"
               (mapconcat (lambda (tg)
-                           (format "<a class=\"meta-tag\" href=\"/blog?tag=%s\">%s</a>"
+                           (format "<a class=\"meta-tag\" href=\"/blog/?tag=%s\">%s</a>"
                                    (url-hexify-string tg) (gl-esc tg)))
                          tags "")
               "</span>"))))
@@ -114,8 +114,8 @@
   (if (not (or newer older)) ""
     (concat
      "<div class=\"post-nav\">"
-     (if newer (format "<a href=\"/blog/%s\">← %s</a>" (plist-get newer :slug) (gl-esc (plist-get newer :title))) "<span></span>")
-     (if older (format "<a href=\"/blog/%s\">%s →</a>" (plist-get older :slug) (gl-esc (plist-get older :title))) "<span></span>")
+     (if newer (format "<a href=\"/blog/%s/\">← %s</a>" (plist-get newer :slug) (gl-esc (plist-get newer :title))) "<span></span>")
+     (if older (format "<a href=\"/blog/%s/\">%s →</a>" (plist-get older :slug) (gl-esc (plist-get older :title))) "<span></span>")
      "</div>")))
 
 (defconst gl-post-template
@@ -140,7 +140,7 @@
     <aside class=\"sidebar\" id=\"sidebar\"></aside>
     <main class=\"content\">
       <article class=\"content-inner narrow\">
-        <a class=\"back-link\" href=\"/blog\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 12H5M11 6l-6 6 6 6\"/></svg>Back to blog</a>
+        <a class=\"back-link\" href=\"/blog/\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 12H5M11 6l-6 6 6 6\"/></svg>Back to blog</a>
         <h1 class=\"post-head-title\">%s</h1>
         <div class=\"post-meta\">
           <span class=\"date\">%s</span>
@@ -184,7 +184,7 @@
 
 (defun gl-post-row (p)
   (concat
-   (format "<a class=\"post-row\" href=\"/blog/%s\" data-tags=\"%s\">"
+   (format "<a class=\"post-row\" href=\"/blog/%s/\" data-tags=\"%s\">"
            (plist-get p :slug) (gl-esc (string-join (plist-get p :tags) " ")))
    "<div class=\"post-meta\">"
    (format "<span class=\"date\">%s</span><span class=\"sep\"></span><span class=\"read\">%s min read</span>"
@@ -236,7 +236,7 @@
 (defun gl-post-alist (p)
   (list (cons "title" (plist-get p :title))
         (cons "date" (gl-fmt-date (plist-get p :time)))
-        (cons "url" (concat "/blog/" (plist-get p :slug)))
+        (cons "url" (concat "/blog/" (plist-get p :slug) "/"))
         (cons "slug" (plist-get p :slug))
         (cons "read" (format "%s min read" (plist-get p :read)))
         (cons "excerpt" (plist-get p :excerpt))
@@ -252,7 +252,7 @@
 (defun gl-rss-item (p)
   (format "  <item>
     <title>%s</title>
-    <link>%s/blog/%s</link>
+    <link>%s/blog/%s/</link>
     <guid>%s/blog/%s</guid>
     <pubDate>%s</pubDate>
     <description>%s</description>
@@ -270,7 +270,7 @@
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
       "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n"
       "  <title>Glocean · Blog</title>\n"
-      (format "  <link>%s/blog</link>\n" gl-site-url)
+      (format "  <link>%s/blog/</link>\n" gl-site-url)
       (format "  <atom:link href=\"%s/feed.xml\" rel=\"self\" type=\"application/rss+xml\"/>\n" gl-site-url)
       "  <description>Glocean's personal blog</description>\n"
       "  <language>en</language>\n"

@@ -31,9 +31,9 @@
   };
 
   var PAGES = [
-    { title: 'About',   sub: 'Who I am · /about',          url: '/about' },
-    { title: 'Blog',    sub: 'Writing & notes · /blog',    url: '/blog' },
-    { title: 'Projects',sub: "Things I've built · /projects", url: '/projects' }
+    { title: 'About',   sub: 'Who I am · /about',          url: '/about/' },
+    { title: 'Blog',    sub: 'Writing & notes · /blog',    url: '/blog/' },
+    { title: 'Projects',sub: "Things I've built · /projects", url: '/projects/' }
   ];
   var PROJECTS = [
     { title: 'dotfiles',           sub: 'Project · Shell',         url: GITHUB + '/dotfiles' },
@@ -59,9 +59,9 @@
       '<button class="search-trigger" type="button" id="searchTrigger">' + I.search +
         '<span style="flex:1">Search</span><kbd>⌘K</kbd></button>' +
       '<nav>' +
-        navItem('about', 'about', 'dot-about', '/about', active) +
-        navItem('blog', 'blog', 'dot-blog', '/blog', active) +
-        navItem('projects', 'projects', 'dot-projects', '/projects', active) +
+        navItem('about', 'about', 'dot-about', '/about/', active) +
+        navItem('blog', 'blog', 'dot-blog', '/blog/', active) +
+        navItem('projects', 'projects', 'dot-projects', '/projects/', active) +
       '</nav>' +
       '<div class="spacer"></div>' +
       '<div class="foot"><div class="rule"></div><div class="row">' +
