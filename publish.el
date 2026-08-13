@@ -48,9 +48,6 @@
   (dolist (p '(("&" . "&amp;") ("<" . "&lt;") (">" . "&gt;")) s)
     (setq s (replace-regexp-in-string (regexp-quote (car p)) (cdr p) s t t))))
 
-(defun gl-attr (s)
-  (replace-regexp-in-string "\"" "&quot;" (gl-esc s) t t))
-
 (defun gl-fmt-date (time)
   (string-trim (replace-regexp-in-string "  +" " " (format-time-string "%b %e, %Y" time))))
 
@@ -138,8 +135,6 @@
   <script>(function(){var e=document.documentElement;e.className+=' js';try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');e.setAttribute('data-theme',t);}catch(n){}})();</script>
   <style>html{color-scheme:dark;background:#191724}html[data-theme=\"light\"]{color-scheme:light;background:#faf4ed}</style>
   <link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">
-  <meta name=\"theme-color\" content=\"#c4a7e7\">
-  <meta name=\"description\" content=\"%s\">
   <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Glocean · Blog\" href=\"/feed.xml\">
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
@@ -185,7 +180,6 @@
 (defun gl-post-html (p)
   (format gl-post-template
           (gl-esc (plist-get p :title))
-          (gl-attr (plist-get p :excerpt))
           (gl-esc (plist-get p :title))
           (gl-meta-html p)
           (plist-get p :body)))
