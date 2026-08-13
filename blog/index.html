@@ -1,39 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog · Glocean</title>
-  <script>(function(){try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
-  <link rel="icon" type="image/svg+xml" id="favicon" href="../favicon.svg">
+  <script>(function(){var e=document.documentElement;e.className+=' js';try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');e.setAttribute('data-theme',t);}catch(n){}})();</script>
+  <style>html{color-scheme:dark;background:#191724}html[data-theme="light"]{color-scheme:light;background:#faf4ed}</style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="theme-color" content="#c4a7e7">
+  <meta name="description" content="Thoughts on software, macOS, Emacs, or whatever rabbit hole I fall down at the time.">
   <link rel="alternate" type="application/rss+xml" title="Glocean · Blog" href="/feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body data-page="blog">
-  <div class="layout">
-    <aside class="sidebar" id="sidebar"></aside>
-    <main class="content left">
-      <div class="content-inner medium">
-        <div class="crumb">~/blog/</div>
-        <h1 class="page-title">Personal Blog</h1>
-        <p class="lede">My experience and thoughts on software, macOS, Emacs, or whatever rabbit hole I fall down at that time.</p>
+  <div class="page">
+    <canvas class="spill"></canvas>
 
-        <!-- POSTS:START -->
-        <div class="tag-filter"><button class="tagchip active" data-tag="">all</button><button class="tagchip" data-tag="emacs">emacs</button></div>
-        <div class="post-list">
-          <a class="post-row" href="/blog/why-emacs/" data-tags="emacs"><div class="post-meta"><span class="date">Jul 4, 2026</span><span class="sep"></span><span class="read">6 min read</span></div><h2 class="post-title">Why Emacs?</h2><p class="post-excerpt">Why the hell would anyone want to run a 40-year-old editor, with evil-mode on top too? Why not just Neovim?</p><div class="tags"><span class="tag">emacs</span></div></a>
+    <div class="view">
+      <header class="topbar" id="topbar"></header>
+
+      <div class="scroll">
+        <div class="slab wide">
+          <div class="head">
+            <div class="eyebrow">Blog</div>
+            <h1 class="page-title">Writing</h1>
+            <p class="lede">Thoughts on software, macOS, Emacs, or whatever rabbit hole I fall down at the time.</p>
+          </div>
+
+          <!-- POSTS:START -->
+        <div class="filter"><button class="active" data-tag="">all</button><button data-tag="emacs">emacs</button><span class="count">1 post</span></div>
+        <div class="rule"></div>
+        <div class="rows">
+          <a class="post-row" href="/blog/why-emacs/" data-tags="emacs"><div class="meta"><span>Jul 4, 2026</span><span class="sep"></span><span>6 min read</span><span class="sep"></span><span class="tags">emacs</span></div><h2 class="row-title">Why Emacs?</h2><p class="row-desc">Why the hell would anyone want to run a 40-year-old editor, with evil-mode on top too? Why not just Neovim?</p></a>
         </div>
+        <p class="empty" hidden>Nothing under that tag yet.</p>
         <!-- POSTS:END -->
+
+          <a class="textlink" href="/feed.xml">RSS feed</a>
+        </div>
       </div>
-      <div class="flower-footer"><canvas class="flower-canvas" data-corner="bottom" data-color-offset="3"></canvas></div>
-    </main>
+    </div>
+
+    <canvas class="wipe"></canvas>
   </div>
-  <script src="../js/flower.js"></script>
-  <script src="../js/posts.js"></script>
-  <script src="../js/site.js"></script>
+
+  <script src="/js/posts.js"></script>
+  <script src="/js/spill.js"></script>
+  <script src="/js/site.js"></script>
 </body>
 </html>

@@ -19,6 +19,28 @@
       org-html-htmlize-output-type nil
       org-html-doctype "html5")
 
+;; --- export backend ---
+
+(defun gl-headline (headline contents info)
+  (let* ((level (org-export-get-relative-level headline info))
+         (tag (format "h%d" (min (1+ level) 6)))
+         (title (org-export-data (org-element-property :title headline) info)))
+    (concat (format "<%s>%s</%s>\n" tag title tag) (or contents ""))))
+
+(defun gl-section (_section contents _info)
+  (or contents ""))
+
+(defun gl-code-block (element _contents _info)
+  (format "<pre><code>%s</code></pre>"
+          (org-html-encode-plain-text
+           (org-remove-indentation (or (org-element-property :value element) "")))))
+
+(org-export-define-derived-backend 'gl-html 'html
+  :translate-alist '((headline . gl-headline)
+                     (section . gl-section)
+                     (src-block . gl-code-block)
+                     (example-block . gl-code-block)))
+
 ;; --- helpers ---
 
 (defun gl-esc (s)
@@ -87,97 +109,92 @@
            (excerpt (string-trim
                      (or (gl-kw kws "EXCERPT") (gl-kw kws "DESCRIPTION")
                          (gl-first-paragraph) "")))
-           (body  (string-trim (org-export-as 'html nil nil t))))
+           (body  (string-trim (org-export-as 'gl-html nil nil t))))
       (list :title title :slug slug :time time :tags (or tags '())
             :read read :excerpt excerpt :body body))))
 
 ;; --- writers ---
 
-(defun gl-tags-html (p)
+(defun gl-meta-html (p)
   (let ((tags (plist-get p :tags)))
-    (if (null tags) ""
-      (concat "<div class=\"tags\">"
-              (mapconcat (lambda (tg) (format "<span class=\"tag\">%s</span>" (gl-esc tg))) tags "")
-              "</div>"))))
-
-(defun gl-meta-tags-html (p)
-  (let ((tags (plist-get p :tags)))
-    (if (null tags) ""
-      (concat "\n          <span class=\"sep\"></span>\n          <span class=\"meta-tags\">"
-              (mapconcat (lambda (tg)
-                           (format "<a class=\"meta-tag\" href=\"/blog/?tag=%s\">%s</a>"
-                                   (url-hexify-string tg) (gl-esc tg)))
-                         tags "")
-              "</span>"))))
-
-(defun gl-nav-html (newer older)
-  (if (not (or newer older)) ""
     (concat
-     "<div class=\"post-nav\">"
-     (if newer (format "<a href=\"/blog/%s/\">← %s</a>" (plist-get newer :slug) (gl-esc (plist-get newer :title))) "<span></span>")
-     (if older (format "<a href=\"/blog/%s/\">%s →</a>" (plist-get older :slug) (gl-esc (plist-get older :title))) "<span></span>")
+     "<div class=\"meta\">"
+     (format "<span>%s</span>" (gl-fmt-date (plist-get p :time)))
+     "<span class=\"sep\"></span>"
+     (format "<span>%s min read</span>" (plist-get p :read))
+     (if (null tags) ""
+       (concat "<span class=\"sep\"></span>"
+               (format "<span class=\"tags\">%s</span>"
+                       (gl-esc (string-join tags ", ")))))
      "</div>")))
 
 (defconst gl-post-template
   "<!DOCTYPE html>
-<html lang=\"en\">
+<html lang=\"en\" data-theme=\"dark\">
 <head>
   <meta charset=\"UTF-8\">
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
   <title>%s · Glocean</title>
-  <script>(function(){try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
-  <link rel=\"icon\" type=\"image/svg+xml\" id=\"favicon\" href=\"../../favicon.svg\">
+  <script>(function(){var e=document.documentElement;e.className+=' js';try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');e.setAttribute('data-theme',t);}catch(n){}})();</script>
+  <style>html{color-scheme:dark;background:#191724}html[data-theme=\"light\"]{color-scheme:light;background:#faf4ed}</style>
+  <link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">
   <meta name=\"theme-color\" content=\"#c4a7e7\">
   <meta name=\"description\" content=\"%s\">
   <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Glocean · Blog\" href=\"/feed.xml\">
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-  <link href=\"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap\" rel=\"stylesheet\">
-  <link rel=\"stylesheet\" href=\"../../css/style.css\">
+  <link rel=\"preload\" as=\"style\" href=\"https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap\" onload=\"this.rel='stylesheet'\">
+  <noscript><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap\"></noscript>
+  <link rel=\"stylesheet\" href=\"/css/style.css\">
 </head>
-<body data-page=\"blog\">
-  <div class=\"layout\">
-    <aside class=\"sidebar\" id=\"sidebar\"></aside>
-    <main class=\"content\">
-      <article class=\"content-inner narrow\">
-        <a class=\"back-link\" href=\"/blog/\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 12H5M11 6l-6 6 6 6\"/></svg>Back to blog</a>
-        <h1 class=\"post-head-title\">%s</h1>
-        <div class=\"post-meta\">
-          <span class=\"date\">%s</span>
-          <span class=\"sep\"></span>
-          <span class=\"read\">%s min read</span>%s
-        </div>
-        <div class=\"prose\">
+<body data-page=\"post\">
+  <div class=\"page\">
+    <canvas class=\"spill\"></canvas>
+
+    <div class=\"view\">
+      <header class=\"topbar\" id=\"topbar\"></header>
+
+      <div class=\"scroll\">
+        <article class=\"slab post\">
+          <a class=\"textlink\" href=\"/blog/\">← Back to blog</a>
+
+          <div class=\"post-head\">
+            <h1 class=\"post-title\">%s</h1>
+            %s
+          </div>
+
+          <div class=\"rule\"></div>
+
+          <div class=\"prose\">
 %s
-        </div>
-        %s
-      </article>
-      <div class=\"flower-footer\"><canvas class=\"flower-canvas\" data-corner=\"bottom\" data-color-offset=\"3\"></canvas></div>
-    </main>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <canvas class=\"wipe\"></canvas>
   </div>
-  <script src=\"../../js/flower.js\"></script>
-  <script src=\"../../js/posts.js\"></script>
-  <script src=\"../../js/site.js\"></script>
+
+  <script src=\"/js/posts.js\"></script>
+  <script src=\"/js/spill.js\"></script>
+  <script src=\"/js/site.js\"></script>
 </body>
 </html>
 ")
 
-(defun gl-post-html (p newer older)
+(defun gl-post-html (p)
   (format gl-post-template
           (gl-esc (plist-get p :title))
           (gl-attr (plist-get p :excerpt))
           (gl-esc (plist-get p :title))
-          (gl-fmt-date (plist-get p :time))
-          (plist-get p :read)
-          (gl-meta-tags-html p)
-          (plist-get p :body)
-          (gl-nav-html newer older)))
+          (gl-meta-html p)
+          (plist-get p :body)))
 
-(defun gl-write-post (p newer older)
+(defun gl-write-post (p)
   (let* ((dir (expand-file-name (plist-get p :slug) gl-blog-dir))
          (file (expand-file-name "index.html" dir)))
     (make-directory dir t)
-    (write-region (gl-post-html p newer older) nil file)
+    (write-region (gl-post-html p) nil file)
     (princ (format "  -> blog/%s/\n" (plist-get p :slug)))))
 
 ;; --- index ---
@@ -186,37 +203,40 @@
   (concat
    (format "<a class=\"post-row\" href=\"/blog/%s/\" data-tags=\"%s\">"
            (plist-get p :slug) (gl-esc (string-join (plist-get p :tags) " ")))
-   "<div class=\"post-meta\">"
-   (format "<span class=\"date\">%s</span><span class=\"sep\"></span><span class=\"read\">%s min read</span>"
-           (gl-fmt-date (plist-get p :time)) (plist-get p :read))
-   "</div>"
-   (format "<h2 class=\"post-title\">%s</h2>" (gl-esc (plist-get p :title)))
+   (gl-meta-html p)
+   (format "<h2 class=\"row-title\">%s</h2>" (gl-esc (plist-get p :title)))
    (let ((e (plist-get p :excerpt)))
-     (if (string-empty-p e) "" (format "<p class=\"post-excerpt\">%s</p>" (gl-esc e))))
-   (gl-tags-html p)
+     (if (string-empty-p e) "" (format "<p class=\"row-desc\">%s</p>" (gl-esc e))))
    "</a>"))
+
+(defun gl-count-label (n)
+  (if (= n 1) "1 post" (format "%d posts" n)))
 
 (defun gl-filter-bar (posts)
   (let ((tags (sort (delete-dups
                      (apply #'append
                             (mapcar (lambda (p) (copy-sequence (plist-get p :tags))) posts)))
                     #'string<)))
-    (if (null tags) ""
-      (concat "<div class=\"tag-filter\">"
-              "<button class=\"tagchip active\" data-tag=\"\">all</button>"
-              (mapconcat (lambda (tg)
-                           (format "<button class=\"tagchip\" data-tag=\"%s\">%s</button>"
-                                   (gl-esc tg) (gl-esc tg)))
-                         tags "")
-              "</div>\n        "))))
+    (concat "<div class=\"filter\">"
+            (if (null tags) ""
+              (concat "<button class=\"active\" data-tag=\"\">all</button>"
+                      (mapconcat (lambda (tg)
+                                   (format "<button data-tag=\"%s\">%s</button>"
+                                           (gl-esc tg) (gl-esc tg)))
+                                 tags "")))
+            (format "<span class=\"count\">%s</span>" (gl-count-label (length posts)))
+            "</div>")))
 
 (defun gl-index-block (posts)
   (if (null posts)
-      "<div class=\"empty-state\">\n          <p>No posts yet :(</p>\n        </div>"
+      (concat "<div class=\"rule\"></div>\n        "
+              "<p class=\"empty\">No posts yet :(</p>")
     (concat (gl-filter-bar posts)
-            "<div class=\"post-list\">\n          "
+            "\n        <div class=\"rule\"></div>"
+            "\n        <div class=\"rows\">\n          "
             (mapconcat #'gl-post-row posts "\n          ")
-            "\n        </div>")))
+            "\n        </div>"
+            "\n        <p class=\"empty\" hidden>Nothing under that tag yet.</p>")))
 
 (defun gl-write-index (posts)
   (let ((file (expand-file-name "index.html" gl-blog-dir))
@@ -285,11 +305,7 @@
   (let* ((files (directory-files gl-posts-dir t "\\.org\\'"))
          (posts (sort (mapcar #'gl-read-post files)
                       (lambda (a b) (time-less-p (plist-get b :time) (plist-get a :time))))))
-    (cl-loop for rest on posts
-             for i from 0
-             do (gl-write-post (car rest)
-                               (when (> i 0) (nth (1- i) posts))
-                               (cadr rest)))
+    (mapc #'gl-write-post posts)
     (gl-write-posts-js posts)
     (gl-write-feed posts)
     (gl-write-index posts)
