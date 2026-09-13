@@ -1,10 +1,33 @@
 (function () {
   'use strict';
 
-  var RAMPS = {
-    dark: ['#191724','#191724','#1c1a29','#1f1d2e','#26233a','#26233a','#2b2b45','#294357','#31748f','#31748f','#3f8496','#6fb2bf','#9ccfd8','#a8b2df','#c4a7e7','#dfa3c3','#eb6f92','#f0a072','#f6c177'],
-    light: ['#faf4ed','#faf4ed','#f6efe6','#f2e9e1','#ece2d6','#e2dcd4','#d3dcda','#bcd0cf','#8fb8bd','#56949f','#56949f','#286983','#7583ac','#907aa9','#b4637a','#c2707a','#d7827e','#ea9d34','#f6c177']
+  var STOPS = {
+    dark:  ['#191724', '#1f1d2e', '#26233a', '#31748f', '#9ccfd8', '#c4a7e7', '#eb6f92', '#f6c177'],
+    light: ['#faf4ed', '#f2e9e1', '#dfdad9', '#56949f', '#286983', '#907aa9', '#d7827e', '#f6c177']
   };
+  var RAMP_BANDS = 22;
+
+  function hexToRgb(h) {
+    return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  }
+
+  function buildRamp(stops, n) {
+    var pts = stops.map(hexToRgb);
+    var segs = pts.length - 1;
+    var out = [];
+    for (var i = 0; i < n; i++) {
+      var t = (i / (n - 1)) * segs;
+      var s = Math.min(segs - 1, Math.floor(t));
+      var f = t - s;
+      var a = pts[s], b = pts[s + 1];
+      out.push([
+        Math.round(a[0] + (b[0] - a[0]) * f),
+        Math.round(a[1] + (b[1] - a[1]) * f),
+        Math.round(a[2] + (b[2] - a[2]) * f)
+      ]);
+    }
+    return out;
+  }
 
   var BAYER = [
     0,32,8,40,2,34,10,42, 48,16,56,24,50,18,58,26,
@@ -14,7 +37,7 @@
   ];
 
   var PIXEL_SIZE = 5;
-  var DRIFT_SPEED = 0.75;
+  var DRIFT_SPEED = 0.48;
   var TURBULENCE = 1;
   var ARMS = 10;
   var WIPE_MS = 260;
@@ -73,12 +96,11 @@
   }
 
   Spill.prototype.buildPalette = function () {
-    var ramp = RAMPS[this.theme === 'light' ? 'light' : 'dark'];
+    var ramp = buildRamp(STOPS[this.theme === 'light' ? 'light' : 'dark'], RAMP_BANDS);
     this.pal = new Uint32Array(ramp.length);
     for (var i = 0; i < ramp.length; i++) {
-      var h = ramp[i];
-      var r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16);
-      this.pal[i] = (255 << 24) | (b << 16) | (g << 8) | r;
+      var c = ramp[i];
+      this.pal[i] = (255 << 24) | (c[2] << 16) | (c[1] << 8) | c[0];
       if (i === 0) this.baseARGB = this.pal[i];
     }
   };
@@ -164,13 +186,14 @@
     var aspect = w / h;
     var cx = 0.5, cy = 0.5;
     var oct = this.small ? 2 : 3;
-    var gamma = reading ? 2.15 : (page ? 1.9 : 1.34);
-    var colWidth = this.small ? 1.15 : (wide ? 0.37 : (reading ? 0.4 : 0.32));
+    var gamma = reading ? 1.65 : (page ? 1.5 : 1.28);
+    var colWidth = this.small ? 1.15 : (wide ? 0.4 : (reading ? 0.44 : 0.36));
 
     for (var y = 0; y < h; y++) {
       var ny = y / h;
       var dy = (ny - cy) * 1.12;
       var row = y * w;
+      var topCalm = page ? Math.min(1, Math.max(0, (ny - 0.03) / 0.24)) : 1;
       for (var x = 0; x < w; x++) {
         var nx = x / w;
         var dx = (nx - cx) * aspect;
@@ -184,22 +207,23 @@
 
         if (ARMS > 0) {
           var th = Math.atan2(dy, dx);
-          var fall = Math.exp(-Math.pow((r - 0.34) * 3.4, 2));
-          v += 0.34 * fall * Math.sin(ARMS * th + t * 0.22 + r * 5.5);
+          var fall = Math.exp(-Math.pow((r - 0.4) * 2.0, 2));
+          v += 0.24 * fall * Math.sin(ARMS * th + t * 0.22 + r * 5.5);
         }
 
         var calm;
         if (page) {
-          calm = Math.min(1, Math.max(0, (Math.abs(dx) / colWidth - 1) / 0.6));
+          calm = Math.min(1, Math.max(0, (Math.abs(dx) / colWidth - 1) / 0.7));
         } else {
           var ex = dx / 0.68, ey = ((ny - 0.515) * 1.12) / 0.44;
           calm = Math.min(1, Math.max(0, (Math.sqrt(ex * ex + ey * ey) - 0.52) / 0.72));
         }
+        calm = Math.min(calm, topCalm);
         var sm = calm * calm * (3 - 2 * calm);
-        var amp = 0.14 + 0.86 * sm;
-        v = v * amp - (1 - amp) * 0.34 + 0.15 * (ny - 0.5) * amp;
+        var amp = 0.16 + 0.84 * sm;
+        v = v * amp - (1 - amp) * 0.42 + 0.15 * (ny - 0.5) * amp;
         v += 0.1 * Math.sin(t * 0.35 + r * 4.2);
-        v -= 0.35 * Math.max(0, r - 0.78);
+        v -= 0.22 * Math.max(0, r - 0.86);
 
         var n = 0.5 + 0.6 * v;
         n = n < 0 ? 0 : n > 1 ? 1 : n;

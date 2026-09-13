@@ -111,8 +111,8 @@ html.js canvas.wipe { display: block; background: var(--base); }
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: 2px clamp(8px, 2vw, 20px);
   padding: 9px clamp(12px, 4vw, 46px);
-  background: color-mix(in srgb, var(--base) 82%, transparent);
-  backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+  background: color-mix(in srgb, var(--base) 88%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .topbar::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
