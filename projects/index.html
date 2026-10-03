@@ -1,68 +1,77 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projects · Glocean</title>
-  <script>(function(){var e=document.documentElement;e.className+=' js';try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');e.setAttribute('data-theme',t);}catch(n){}})();</script>
-  <style>html{color-scheme:dark;background:#191724}html[data-theme="light"]{color-scheme:light;background:#faf4ed}</style>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Made · Glocean</title>
+  <script>document.documentElement.className+=' js';</script>
+  <style>html{color-scheme:dark;background:#1f1a24}</style>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body data-page="projects">
-  <div class="page">
-    <canvas class="spill"></canvas>
+<body data-page="made">
+  <div class="root">
+    <canvas class="meadow" aria-hidden="true"></canvas>
 
-    <div class="view">
-      <header class="topbar" id="topbar"></header>
-
-      <div class="scroll">
-        <div class="slab wide">
-          <div class="head">
-            <div class="eyebrow">Projects</div>
-            <h1 class="page-title">Things I've built</h1>
-            <p class="lede">All of my projects, big and small. Click to jump to the repo.</p>
-          </div>
-
-          <div class="rule"></div>
-
-          <div class="rows">
-            <a class="proj-row" href="https://github.com/gloceandotdev/dotfiles" target="_blank" rel="noopener">
-              <h2 class="row-title">dotfiles</h2>
-              <span class="lang">Shell</span>
-              <p class="row-desc">Minimal macOS dotfiles with automatic light/dark mode switching.</p>
-            </a>
-            <a class="proj-row" href="https://github.com/gloceandotdev/iris-rockbox-theme" target="_blank" rel="noopener">
-              <h2 class="row-title">iris-rockbox-theme</h2>
-              <span class="lang">Markup</span>
-              <p class="row-desc">A clean Rosé Pine theme for Rockbox that does not use any beatmaps.</p>
-            </a>
-            <a class="proj-row" href="https://github.com/gloceandotdev/.emacs.d" target="_blank" rel="noopener">
-              <h2 class="row-title">.emacs.d</h2>
-              <span class="lang">Emacs Lisp</span>
-              <p class="row-desc">Elegant, no-distraction Emacs configuration with evil-mode and a custom Rosé Pine theme.</p>
-            </a>
-            <a class="proj-row" href="https://github.com/gloceandotdev/glocean.dev" target="_blank" rel="noopener">
-              <h2 class="row-title">glocean.dev</h2>
-              <span class="lang">HTML, CSS, JavaScript</span>
-              <p class="row-desc">A framework-free personal site in vanilla HTML, CSS, and JS.</p>
-            </a>
-          </div>
-
-          <a class="textlink" href="https://github.com/gloceandotdev" target="_blank" rel="noopener">More on GitHub</a>
+    <div class="wrap">
+      <header class="top">
+        <div class="wordmark">
+          <a href="/" aria-label="glocean, home"><canvas width="72" height="18"></canvas></a>
+          <button type="button" aria-label="pick a petal"></button>
         </div>
+        <nav class="nav">
+          <a href="/blog/">writing</a>
+          <a class="active" href="/projects/">made</a>
+          <a href="/friends/">friends</a>
+          <a href="/about/">about</a>
+        </nav>
+      </header>
+
+      <div class="fade">
+        <main>
+          <div class="page">
+            <h1>Things I've built</h1>
+            <p class="lede">All of my projects, big and small. Click to jump to the repo.</p>
+            <div class="proj-list">
+              <a class="proj" href="https://github.com/gloceandotdev/dotfiles" target="_blank" rel="noopener">
+                <span class="proj-head"><span class="row-title">dotfiles</span><span class="lang">shell</span></span>
+                <span class="row-desc">Minimal macOS dotfiles with automatic light/dark mode switching.</span>
+              </a>
+              <a class="proj" href="https://github.com/gloceandotdev/iris-rockbox-theme" target="_blank" rel="noopener">
+                <span class="proj-head"><span class="row-title">iris-rockbox-theme</span><span class="lang">markup</span></span>
+                <span class="row-desc">A clean Rosé Pine theme for Rockbox that does not use any bitmaps.</span>
+              </a>
+              <a class="proj" href="https://github.com/gloceandotdev/.emacs.d" target="_blank" rel="noopener">
+                <span class="proj-head"><span class="row-title">.emacs.d</span><span class="lang">emacs lisp</span></span>
+                <span class="row-desc">Elegant, no-distraction Emacs configuration with evil-mode and a custom Rosé Pine theme.</span>
+              </a>
+              <a class="proj" href="https://github.com/gloceandotdev/glocean.dev" target="_blank" rel="noopener">
+                <span class="proj-head"><span class="row-title">glocean.dev</span><span class="lang">html, css, js</span></span>
+                <span class="row-desc">A framework-free personal site in vanilla HTML, CSS, and JS.</span>
+              </a>
+            </div>
+            <a class="endlink" href="https://github.com/gloceandotdev" target="_blank" rel="noopener">more on github</a>
+          </div>
+        </main>
+        <div class="floor" aria-hidden="true"></div>
       </div>
+
+      <footer class="foot">
+        <a href="https://github.com/gloceandotdev" target="_blank" rel="noopener">github</a>
+        <span class="muted">email</span>
+        <a href="/feed.xml">rss</a>
+      </footer>
     </div>
 
-    <canvas class="wipe"></canvas>
+    <canvas class="fall" aria-hidden="true"></canvas>
   </div>
 
-  <script src="/js/posts.js"></script>
-  <script src="/js/spill.js"></script>
+  <script src="/js/meadow.js"></script>
   <script src="/js/site.js"></script>
 </body>
 </html>

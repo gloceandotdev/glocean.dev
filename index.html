@@ -1,78 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Glocean</title>
-  <script>(function(){var e=document.documentElement;e.className+=' js';try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');e.setAttribute('data-theme',t);}catch(n){}})();</script>
-  <style>html{color-scheme:dark;background:#191724}html[data-theme="light"]{color-scheme:light;background:#faf4ed}</style>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script>document.documentElement.className+=' js';</script>
+  <style>html{color-scheme:dark;background:#1f1a24}</style>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png">
   <link rel="alternate" type="application/rss+xml" title="Glocean · Blog" href="/feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body data-page="home">
-  <div class="page">
-    <canvas class="spill"></canvas>
+  <div class="root">
+    <canvas class="meadow" aria-hidden="true"></canvas>
 
-    <div class="home">
-      <h1 class="wordmark">Glocean</h1>
+    <div class="wrap">
+      <header class="top">
+        <div class="wordmark">
+          <a href="/" aria-label="glocean, home"><canvas width="72" height="18"></canvas></a>
+          <button type="button" aria-label="pick a petal"></button>
+        </div>
+        <nav class="nav">
+          <a href="/blog/">writing</a>
+          <a href="/projects/">made</a>
+          <a href="/friends/">friends</a>
+          <a href="/about/">about</a>
+        </nav>
+      </header>
 
-      <div class="pips"><i></i><i></i><i></i></div>
+      <div class="fade">
+        <main>
+          <div class="home">
+            <h1>Hi. I write here now and then, mostly about Emacs.</h1>
+            <!-- LATEST:START -->
+            <div class="latest"><span class="muted">latest</span><a class="accent" href="/blog/why-emacs/">Why Emacs?</a><span class="muted">Jul 4</span></div>
+            <!-- LATEST:END -->
+          </div>
+        </main>
+      </div>
 
-      <nav class="home-nav">
-        <a href="/about/">About</a>
-        <a href="/blog/">Blog</a>
-        <a href="/projects/">Projects</a>
-      </nav>
-
-      <button type="button" class="toggle home-toggle" aria-label="Toggle light / dark theme">
-        <svg class="moon" viewBox="0 0 16 15" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true">
-          <rect x="5" y="0" width="3" height="1"></rect>
-          <rect x="3" y="1" width="4" height="1"></rect>
-          <rect x="2" y="2" width="4" height="1"></rect>
-          <rect x="1" y="3" width="4" height="1"></rect>
-          <rect x="1" y="4" width="4" height="1"></rect>
-          <rect x="0" y="5" width="5" height="1"></rect>
-          <rect x="0" y="6" width="5" height="1"></rect>
-          <rect x="0" y="7" width="5" height="1"></rect>
-          <rect x="15" y="7" width="1" height="1"></rect>
-          <rect x="0" y="8" width="6" height="1"></rect>
-          <rect x="14" y="8" width="2" height="1"></rect>
-          <rect x="0" y="9" width="7" height="1"></rect>
-          <rect x="13" y="9" width="3" height="1"></rect>
-          <rect x="1" y="10" width="14" height="1"></rect>
-          <rect x="1" y="11" width="14" height="1"></rect>
-          <rect x="2" y="12" width="12" height="1"></rect>
-          <rect x="3" y="13" width="10" height="1"></rect>
-          <rect x="5" y="14" width="6" height="1"></rect>
-        </svg>
-        <svg class="sun" viewBox="0 0 9 9" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true">
-          <rect x="4" y="0" width="1" height="1"></rect>
-          <rect x="1" y="1" width="1" height="1"></rect>
-          <rect x="7" y="1" width="1" height="1"></rect>
-          <rect x="4" y="2" width="1" height="1"></rect>
-          <rect x="3" y="3" width="3" height="1"></rect>
-          <rect x="0" y="4" width="1" height="1"></rect>
-          <rect x="2" y="4" width="5" height="1"></rect>
-          <rect x="8" y="4" width="1" height="1"></rect>
-          <rect x="3" y="5" width="3" height="1"></rect>
-          <rect x="4" y="6" width="1" height="1"></rect>
-          <rect x="1" y="7" width="1" height="1"></rect>
-          <rect x="7" y="7" width="1" height="1"></rect>
-          <rect x="4" y="8" width="1" height="1"></rect>
-        </svg>
-      </button>
+      <footer class="foot">
+        <a href="https://github.com/gloceandotdev" target="_blank" rel="noopener">github</a>
+        <span class="muted">email</span>
+        <a href="/feed.xml">rss</a>
+      </footer>
     </div>
 
-    <canvas class="wipe"></canvas>
+    <canvas class="fall" aria-hidden="true"></canvas>
   </div>
 
-  <script src="/js/posts.js"></script>
-  <script src="/js/spill.js"></script>
+  <script src="/js/meadow.js"></script>
   <script src="/js/site.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@
 (require 'cl-lib)
 (require 'subr-x)
 (require 'json)
+(require 'url-util)
 
 (defconst gl-root
   (file-name-directory (or load-file-name buffer-file-name default-directory)))
@@ -112,66 +113,105 @@
 
 ;; --- writers ---
 
+(defun gl-fmt-short-date (time)
+  (string-trim (replace-regexp-in-string "  +" " " (format-time-string "%b %e" time))))
+
 (defun gl-meta-html (p)
+  (let ((tags (plist-get p :tags)))
+    (concat
+     "<span class=\"meta\">"
+     (format "<span>%s</span>" (gl-fmt-date (plist-get p :time)))
+     (format "<span>%s min read</span>" (plist-get p :read))
+     (if (null tags) ""
+       (format "<span class=\"tags\">%s</span>" (gl-esc (string-join tags ", "))))
+     "</span>")))
+
+(defun gl-tag-links (tags)
+  (mapconcat (lambda (tg)
+               (format "<a href=\"/blog/?tag=%s\">%s</a>"
+                       (url-hexify-string tg) (gl-esc tg)))
+             tags ", "))
+
+(defun gl-post-meta-html (p)
   (let ((tags (plist-get p :tags)))
     (concat
      "<div class=\"meta\">"
      (format "<span>%s</span>" (gl-fmt-date (plist-get p :time)))
-     "<span class=\"sep\"></span>"
      (format "<span>%s min read</span>" (plist-get p :read))
-     (if (null tags) ""
-       (concat "<span class=\"sep\"></span>"
-               (format "<span class=\"tags\">%s</span>"
-                       (gl-esc (string-join tags ", ")))))
+     (if (null tags) "" (format "<span>%s</span>" (gl-tag-links tags)))
+     "</div>")))
+
+(defun gl-post-end-html (p)
+  (let ((tags (plist-get p :tags)))
+    (concat
+     "<div class=\"post-end\">"
+     (if (null tags) "<span></span>"
+       (format "<span class=\"filed\">filed under <span>%s</span></span>" (gl-tag-links tags)))
+     "<a class=\"accent\" href=\"/blog/\">all writing</a>"
      "</div>")))
 
 (defconst gl-post-template
   "<!DOCTYPE html>
-<html lang=\"en\" data-theme=\"dark\">
+<html lang=\"en\">
 <head>
   <meta charset=\"UTF-8\">
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
   <title>%s · Glocean</title>
-  <script>(function(){var e=document.documentElement;e.className+=' js';try{var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');e.setAttribute('data-theme',t);}catch(n){}})();</script>
-  <style>html{color-scheme:dark;background:#191724}html[data-theme=\"light\"]{color-scheme:light;background:#faf4ed}</style>
-  <link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">
+  <script>document.documentElement.className+=' js';</script>
+  <style>html{color-scheme:dark;background:#1f1a24}</style>
+  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/assets/favicon-32.png\">
+  <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/assets/favicon-16.png\">
+  <link rel=\"apple-touch-icon\" href=\"/assets/favicon-180.png\">
   <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Glocean · Blog\" href=\"/feed.xml\">
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-  <link rel=\"preload\" as=\"style\" href=\"https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap\" onload=\"this.rel='stylesheet'\">
-  <noscript><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..400&family=JetBrains+Mono:wght@400;500&display=swap\"></noscript>
+  <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=DotGothic16&display=swap\">
   <link rel=\"stylesheet\" href=\"/css/style.css\">
 </head>
 <body data-page=\"post\">
-  <div class=\"page\">
-    <canvas class=\"spill\"></canvas>
+  <div class=\"root\">
+    <canvas class=\"meadow\" aria-hidden=\"true\"></canvas>
 
-    <div class=\"view\">
-      <header class=\"topbar\" id=\"topbar\"></header>
+    <div class=\"wrap\">
+      <header class=\"top\">
+        <div class=\"wordmark\">
+          <a href=\"/\" aria-label=\"glocean, home\"><canvas width=\"72\" height=\"18\"></canvas></a>
+          <button type=\"button\" aria-label=\"pick a petal\"></button>
+        </div>
+        <nav class=\"nav\">
+          <a class=\"active\" href=\"/blog/\">writing</a>
+          <a href=\"/projects/\">made</a>
+          <a href=\"/friends/\">friends</a>
+          <a href=\"/about/\">about</a>
+        </nav>
+      </header>
 
-      <div class=\"scroll\">
-        <article class=\"slab post\">
-          <a class=\"textlink\" href=\"/blog/\">← Back to blog</a>
-
-          <div class=\"post-head\">
-            <h1 class=\"post-title\">%s</h1>
+      <div class=\"fade\">
+        <main>
+          <article class=\"post\">
+            <a class=\"back\" href=\"/blog/\">← writing</a>
+            <h1>%s</h1>
             %s
-          </div>
-
-          <div class=\"rule\"></div>
-
-          <div class=\"prose\">
+            <div class=\"prose\">
 %s
-          </div>
-        </article>
+            </div>
+            %s
+          </article>
+        </main>
+        <div class=\"floor\" aria-hidden=\"true\"></div>
       </div>
+
+      <footer class=\"foot\">
+        <a href=\"https://github.com/gloceandotdev\" target=\"_blank\" rel=\"noopener\">github</a>
+        <span class=\"muted\">email</span>
+        <a href=\"/feed.xml\">rss</a>
+      </footer>
     </div>
 
-    <canvas class=\"wipe\"></canvas>
+    <canvas class=\"fall\" aria-hidden=\"true\"></canvas>
   </div>
 
-  <script src=\"/js/posts.js\"></script>
-  <script src=\"/js/spill.js\"></script>
+  <script src=\"/js/meadow.js\"></script>
   <script src=\"/js/site.js\"></script>
 </body>
 </html>
@@ -181,8 +221,9 @@
   (format gl-post-template
           (gl-esc (plist-get p :title))
           (gl-esc (plist-get p :title))
-          (gl-meta-html p)
-          (plist-get p :body)))
+          (gl-post-meta-html p)
+          (plist-get p :body)
+          (gl-post-end-html p)))
 
 (defun gl-write-post (p)
   (let* ((dir (expand-file-name (plist-get p :slug) gl-blog-dir))
@@ -223,14 +264,12 @@
 
 (defun gl-index-block (posts)
   (if (null posts)
-      (concat "<div class=\"rule\"></div>\n        "
-              "<p class=\"empty\">No posts yet :(</p>")
+      (concat (gl-filter-bar posts)
+              "\n            <p class=\"empty\">No posts yet :(</p>")
     (concat (gl-filter-bar posts)
-            "\n        <div class=\"rule\"></div>"
-            "\n        <div class=\"rows\">\n          "
-            (mapconcat #'gl-post-row posts "\n          ")
-            "\n        </div>"
-            "\n        <p class=\"empty\" hidden>Nothing under that tag yet.</p>")))
+            "\n            "
+            (mapconcat #'gl-post-row posts "\n            ")
+            "\n            <p class=\"empty\" hidden>Nothing under that tag yet.</p>")))
 
 (defun gl-write-index (posts)
   (let ((file (expand-file-name "index.html" gl-blog-dir))
@@ -242,7 +281,30 @@
       (unless (re-search-forward
                (concat (regexp-quote start) "\\(?:.\\|\n\\)*?" (regexp-quote end)) nil t)
         (error "POSTS markers not found in %s" file))
-      (replace-match (concat start "\n        " (gl-index-block posts) "\n        " end) t t)
+      (replace-match (concat start "\n            " (gl-index-block posts) "\n            " end) t t)
+      (write-region (point-min) (point-max) file))))
+
+(defun gl-latest-html (posts)
+  (if (null posts) ""
+    (let ((p (car posts)))
+      (concat
+       "<div class=\"latest\"><span class=\"muted\">latest</span>"
+       (format "<a class=\"accent\" href=\"/blog/%s/\">%s</a>"
+               (plist-get p :slug) (gl-esc (plist-get p :title)))
+       (format "<span class=\"muted\">%s</span>" (gl-fmt-short-date (plist-get p :time)))
+       "</div>"))))
+
+(defun gl-write-latest (posts)
+  (let ((file (expand-file-name "index.html" gl-root))
+        (start "<!-- LATEST:START -->")
+        (end "<!-- LATEST:END -->"))
+    (with-temp-buffer
+      (insert-file-contents file)
+      (goto-char (point-min))
+      (unless (re-search-forward
+               (concat (regexp-quote start) "\\(?:.\\|\n\\)*?" (regexp-quote end)) nil t)
+        (error "LATEST markers not found in %s" file))
+      (replace-match (concat start "\n            " (gl-latest-html posts) "\n            " end) t t)
       (write-region (point-min) (point-max) file))))
 
 ;; --- search ---
@@ -303,6 +365,7 @@
     (gl-write-posts-js posts)
     (gl-write-feed posts)
     (gl-write-index posts)
+    (gl-write-latest posts)
     (princ (format "Published %d post(s).\n" (length posts)))))
 
 (gl-publish)

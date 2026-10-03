@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Writing · Glocean</title>
+  <title>Friends · Glocean</title>
   <script>document.documentElement.className+=' js';</script>
   <style>html{color-scheme:dark;background:#1f1a24}</style>
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
   <link rel="apple-touch-icon" href="/assets/favicon-180.png">
-  <link rel="alternate" type="application/rss+xml" title="Glocean · Blog" href="/feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body data-page="writing">
+<body data-page="friends">
   <div class="root">
     <canvas class="meadow" aria-hidden="true"></canvas>
 
@@ -26,9 +25,9 @@
           <button type="button" aria-label="pick a petal"></button>
         </div>
         <nav class="nav">
-          <a class="active" href="/blog/">writing</a>
+          <a href="/blog/">writing</a>
           <a href="/projects/">made</a>
-          <a href="/friends/">friends</a>
+          <a class="active" href="/friends/">friends</a>
           <a href="/about/">about</a>
         </nav>
       </header>
@@ -36,14 +35,24 @@
       <div class="fade">
         <main>
           <div class="page">
-            <h1>Writing</h1>
-            <p class="lede">Thoughts on software, macOS, Emacs, or whatever rabbit hole I fall down at the time.</p>
-            <!-- POSTS:START -->
-            <div class="filter"><button class="active" data-tag="">all</button><button data-tag="emacs">emacs</button><span class="count">1 post</span></div>
-            <a class="post-row" href="/blog/why-emacs/" data-tags="emacs"><span class="meta"><span>Jul 4, 2026</span><span>6 min read</span><span class="tags">emacs</span></span><h2 class="row-title">Why Emacs?</h2><p class="row-desc">Why the hell would anyone want to run a 40-year-old editor, with evil-mode on top too? Why not just Neovim?</p></a>
-            <p class="empty" hidden>Nothing under that tag yet.</p>
-            <!-- POSTS:END -->
-            <a class="endlink" href="/feed.xml">rss feed</a>
+            <h1>Friends</h1>
+            <p class="lede">This site is 88×31 compatible. Grab mine, send me yours.</p>
+            <div class="badge-own">
+              <img src="/88x31.gif" width="88" height="31" alt="glocean.dev">
+              <div class="badge-info">
+                <code>&lt;a href="https://glocean.dev"&gt;&lt;img src="https://glocean.dev/88x31.gif" width="88" height="31" alt="glocean.dev"&gt;&lt;/a&gt;</code>
+                <div class="badge-actions">
+                  <button type="button" class="btn" id="badgeCopy">copy snippet</button>
+                  <a href="/88x31.gif" download="glocean-88x31.gif">gif</a>
+                  <a href="/assets/glocean-88x31.png" download="glocean-88x31.png">png</a>
+                </div>
+              </div>
+            </div>
+            <div class="badges">
+              <a href="https://blog.amilie.dev" target="_blank" rel="noopener"><img src="/assets/badge-amilie.gif" width="88" height="31" alt="blog.amilie.dev"></a>
+              <a href="https://bontboss.com" target="_blank" rel="noopener"><img src="/assets/badge-bontboss.png" width="88" height="31" alt="bontboss.com"></a>
+              <a href="https://coruna.codeberg.page/index.html" target="_blank" rel="noopener"><img src="/assets/badge-coruna.png" width="88" height="31" alt="coruna.codeberg.page"></a>
+            </div>
           </div>
         </main>
         <div class="floor" aria-hidden="true"></div>
