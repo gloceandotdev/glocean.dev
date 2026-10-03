@@ -10,7 +10,7 @@
 (defconst gl-root
   (file-name-directory (or load-file-name buffer-file-name default-directory)))
 (defconst gl-posts-dir (expand-file-name "posts" gl-root))
-(defconst gl-blog-dir  (expand-file-name "blog" gl-root))
+(defconst gl-blog-dir  (expand-file-name "writing" gl-root))
 (defconst gl-site-url  "https://glocean.dev")
 
 (setq org-export-with-section-numbers nil
@@ -128,7 +128,7 @@
 
 (defun gl-tag-links (tags)
   (mapconcat (lambda (tg)
-               (format "<a href=\"/blog/?tag=%s\">%s</a>"
+               (format "<a href=\"/writing/?tag=%s\">%s</a>"
                        (url-hexify-string tg) (gl-esc tg)))
              tags ", "))
 
@@ -147,7 +147,7 @@
      "<div class=\"post-end\">"
      (if (null tags) "<span></span>"
        (format "<span class=\"filed\">filed under <span>%s</span></span>" (gl-tag-links tags)))
-     "<a class=\"accent\" href=\"/blog/\">all writing</a>"
+     "<a class=\"accent\" href=\"/writing/\">all writing</a>"
      "</div>")))
 
 (defconst gl-post-template
@@ -156,16 +156,18 @@
 <head>
   <meta charset=\"UTF-8\">
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-  <title>%s · Glocean</title>
+  <title>glocean - %s</title>
   <script>document.documentElement.className+=' js';</script>
   <style>html{color-scheme:dark;background:#1f1a24}</style>
+  <meta name=\"theme-color\" content=\"#c4b5e3\">
+  <meta property=\"og:title\" content=\"glocean - %s\">
+  <meta property=\"og:image\" content=\"https://glocean.dev/assets/og.png\">
+  <meta name=\"twitter:card\" content=\"summary_large_image\">
   <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/assets/favicon-32.png\">
   <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/assets/favicon-16.png\">
   <link rel=\"apple-touch-icon\" href=\"/assets/favicon-180.png\">
-  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Glocean · Blog\" href=\"/feed.xml\">
-  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
-  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-  <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=DotGothic16&display=swap\">
+  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"glocean - writing\" href=\"/feed.xml\">
+  <link rel=\"preload\" href=\"/fonts/glocean-dot.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>
   <link rel=\"stylesheet\" href=\"/css/style.css\">
 </head>
 <body data-page=\"post\">
@@ -179,8 +181,8 @@
           <button type=\"button\" aria-label=\"pick a petal\"></button>
         </div>
         <nav class=\"nav\">
-          <a class=\"active\" href=\"/blog/\">writing</a>
-          <a href=\"/projects/\">made</a>
+          <a class=\"active\" href=\"/writing/\">writing</a>
+          <a href=\"/made/\">made</a>
           <a href=\"/friends/\">friends</a>
           <a href=\"/about/\">about</a>
         </nav>
@@ -189,7 +191,6 @@
       <div class=\"fade\">
         <main>
           <article class=\"post\">
-            <a class=\"back\" href=\"/blog/\">← writing</a>
             <h1>%s</h1>
             %s
             <div class=\"prose\">
@@ -221,6 +222,7 @@
   (format gl-post-template
           (gl-esc (plist-get p :title))
           (gl-esc (plist-get p :title))
+          (gl-esc (plist-get p :title))
           (gl-post-meta-html p)
           (plist-get p :body)
           (gl-post-end-html p)))
@@ -230,13 +232,13 @@
          (file (expand-file-name "index.html" dir)))
     (make-directory dir t)
     (write-region (gl-post-html p) nil file)
-    (princ (format "  -> blog/%s/\n" (plist-get p :slug)))))
+    (princ (format "  -> writing/%s/\n" (plist-get p :slug)))))
 
 ;; --- index ---
 
 (defun gl-post-row (p)
   (concat
-   (format "<a class=\"post-row\" href=\"/blog/%s/\" data-tags=\"%s\">"
+   (format "<a class=\"post-row\" href=\"/writing/%s/\" data-tags=\"%s\">"
            (plist-get p :slug) (gl-esc (string-join (plist-get p :tags) " ")))
    (gl-meta-html p)
    (format "<h2 class=\"row-title\">%s</h2>" (gl-esc (plist-get p :title)))
@@ -289,7 +291,7 @@
     (let ((p (car posts)))
       (concat
        "<div class=\"latest\"><span class=\"muted\">latest</span>"
-       (format "<a class=\"accent\" href=\"/blog/%s/\">%s</a>"
+       (format "<a class=\"accent\" href=\"/writing/%s/\">%s</a>"
                (plist-get p :slug) (gl-esc (plist-get p :title)))
        (format "<span class=\"muted\">%s</span>" (gl-fmt-short-date (plist-get p :time)))
        "</div>"))))
@@ -312,7 +314,7 @@
 (defun gl-post-alist (p)
   (list (cons "title" (plist-get p :title))
         (cons "date" (gl-fmt-date (plist-get p :time)))
-        (cons "url" (concat "/blog/" (plist-get p :slug) "/"))
+        (cons "url" (concat "/writing/" (plist-get p :slug) "/"))
         (cons "slug" (plist-get p :slug))
         (cons "read" (format "%s min read" (plist-get p :read)))
         (cons "excerpt" (plist-get p :excerpt))
@@ -328,8 +330,8 @@
 (defun gl-rss-item (p)
   (format "  <item>
     <title>%s</title>
-    <link>%s/blog/%s/</link>
-    <guid>%s/blog/%s</guid>
+    <link>%s/writing/%s/</link>
+    <guid>%s/writing/%s</guid>
     <pubDate>%s</pubDate>
     <description>%s</description>
   </item>\n"
@@ -345,8 +347,8 @@
      (concat
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
       "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n"
-      "  <title>Glocean · Blog</title>\n"
-      (format "  <link>%s/blog/</link>\n" gl-site-url)
+      "  <title>glocean - writing</title>\n"
+      (format "  <link>%s/writing/</link>\n" gl-site-url)
       (format "  <atom:link href=\"%s/feed.xml\" rel=\"self\" type=\"application/rss+xml\"/>\n" gl-site-url)
       "  <description>Glocean's personal blog</description>\n"
       "  <language>en</language>\n"

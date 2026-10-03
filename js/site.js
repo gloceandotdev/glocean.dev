@@ -1,7 +1,9 @@
 (function () {
   'use strict';
 
-  var SNIPPET = '<a href="https://glocean.dev"><img src="https://glocean.dev/88x31.gif" width="88" height="31" alt="glocean.dev"></a>';
+  function snippet(ext) {
+    return '<a href="https://glocean.dev"><img src="https://glocean.dev/88x31.' + ext + '" width="88" height="31" alt="glocean.dev"></a>';
+  }
 
   var reduced = false;
   try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
@@ -57,14 +59,14 @@
   }
 
   function initBadgeCopy() {
-    var btn = document.getElementById('badgeCopy');
-    if (!btn) return;
-    var timer;
-    btn.addEventListener('click', function () {
-      try { navigator.clipboard.writeText(SNIPPET); } catch (e) {}
-      btn.textContent = 'copied';
-      clearTimeout(timer);
-      timer = setTimeout(function () { btn.textContent = 'copy snippet'; }, 1600);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+      var ext = btn.getAttribute('data-copy'), label = btn.textContent, timer;
+      btn.addEventListener('click', function () {
+        try { navigator.clipboard.writeText(snippet(ext)); } catch (e) {}
+        btn.textContent = 'copied';
+        clearTimeout(timer);
+        timer = setTimeout(function () { btn.textContent = label; }, 1600);
+      });
     });
   }
 

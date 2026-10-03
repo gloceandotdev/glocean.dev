@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-  <title>Glocean · Blog</title>
-  <link>https://glocean.dev/blog/</link>
+  <title>glocean - writing</title>
+  <link>https://glocean.dev/writing/</link>
   <atom:link href="https://glocean.dev/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Glocean's personal blog</description>
   <language>en</language>
-  <lastBuildDate>Thu, 13 Aug 2026 20:19:59 +0400</lastBuildDate>
+  <lastBuildDate>Sat, 03 Oct 2026 16:26:14 +0400</lastBuildDate>
   <item>
     <title>Why Emacs?</title>
-    <link>https://glocean.dev/blog/why-emacs/</link>
-    <guid>https://glocean.dev/blog/why-emacs</guid>
+    <link>https://glocean.dev/writing/why-emacs/</link>
+    <guid>https://glocean.dev/writing/why-emacs</guid>
     <pubDate>Sat, 04 Jul 2026 00:00:00 +0400</pubDate>
     <description>Why the hell would anyone want to run a 40-year-old editor, with evil-mode on top too? Why not just Neovim?</description>
   </item>

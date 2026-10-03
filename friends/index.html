@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Friends · Glocean</title>
+  <title>glocean - friends</title>
   <script>document.documentElement.className+=' js';</script>
   <style>html{color-scheme:dark;background:#1f1a24}</style>
+  <meta name="theme-color" content="#c4b5e3">
+  <meta property="og:title" content="glocean - friends">
+  <meta property="og:image" content="https://glocean.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
   <link rel="apple-touch-icon" href="/assets/favicon-180.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
+  <link rel="preload" href="/fonts/glocean-dot.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body data-page="friends">
@@ -25,8 +27,8 @@
           <button type="button" aria-label="pick a petal"></button>
         </div>
         <nav class="nav">
-          <a href="/blog/">writing</a>
-          <a href="/projects/">made</a>
+          <a href="/writing/">writing</a>
+          <a href="/made/">made</a>
           <a class="active" href="/friends/">friends</a>
           <a href="/about/">about</a>
         </nav>
@@ -42,9 +44,10 @@
               <div class="badge-info">
                 <code>&lt;a href="https://glocean.dev"&gt;&lt;img src="https://glocean.dev/88x31.gif" width="88" height="31" alt="glocean.dev"&gt;&lt;/a&gt;</code>
                 <div class="badge-actions">
-                  <button type="button" class="btn" id="badgeCopy">copy snippet</button>
-                  <a href="/88x31.gif" download="glocean-88x31.gif">gif</a>
-                  <a href="/assets/glocean-88x31.png" download="glocean-88x31.png">png</a>
+                  <button type="button" class="btn" data-copy="gif">copy gif</button>
+                  <button type="button" class="btn" data-copy="png">copy png</button>
+                  <a class="btn" href="/88x31.gif" download="glocean-88x31.gif">download gif</a>
+                  <a class="btn" href="/88x31.png" download="glocean-88x31.png">download png</a>
                 </div>
               </div>
             </div>
