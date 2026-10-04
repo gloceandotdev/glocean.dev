@@ -183,6 +183,7 @@ button.theme:focus-visible { outline: 1px solid var(--accent); outline-offset: 4
   border: 1px solid var(--line);
 }
 .btn:hover { color: var(--accent); }
+.btn[hidden] { display: none; }
 
 .filter {
   margin-top: 44px;

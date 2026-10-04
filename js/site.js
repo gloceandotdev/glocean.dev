@@ -61,7 +61,7 @@
   function initTheme() {
     var root = document.documentElement;
     var sys = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
-    var btns = Array.prototype.slice.call(document.querySelectorAll('button.theme'));
+    var btns = Array.prototype.slice.call(document.querySelectorAll('button.theme, button[data-theme-toggle]'));
 
     function system() { return sys && sys.matches ? 'light' : 'dark'; }
     function current() {
@@ -70,7 +70,7 @@
     }
     function label() {
       var next = current() === 'dark' ? 'light' : 'dark';
-      btns.forEach(function (b) { b.textContent = next + ' mode'; b.hidden = false; });
+      btns.forEach(function (b) { b.textContent = b.getAttribute('data-' + next) || next + ' mode'; b.hidden = false; });
     }
 
     btns.forEach(function (b) {
