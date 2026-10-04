@@ -156,17 +156,17 @@
 <head>
   <meta charset=\"UTF-8\">
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-  <title>glocean - %s</title>
+  <title>Glocean - %s</title>
   <script>document.documentElement.className+=' js';</script>
   <style>html{color-scheme:dark;background:#1f1a24}</style>
   <meta name=\"theme-color\" content=\"#c4b5e3\">
-  <meta property=\"og:title\" content=\"&#8203;\">
+  <meta property=\"og:title\" content=\"Glocean - %s\">
   <meta property=\"og:image\" content=\"https://glocean.dev/assets/og.png\">
   <meta name=\"twitter:card\" content=\"summary_large_image\">
   <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/assets/favicon-32.png\">
   <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/assets/favicon-16.png\">
   <link rel=\"apple-touch-icon\" href=\"/assets/favicon-180.png\">
-  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"glocean - writing\" href=\"/feed.xml\">
+  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Glocean - writing\" href=\"/feed.xml\">
   <link rel=\"preload\" href=\"/fonts/glocean-dot.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>
   <link rel=\"stylesheet\" href=\"/css/style.css\">
 </head>
@@ -220,6 +220,7 @@
 
 (defun gl-post-html (p)
   (format gl-post-template
+          (gl-esc (plist-get p :title))
           (gl-esc (plist-get p :title))
           (gl-esc (plist-get p :title))
           (gl-post-meta-html p)
@@ -346,7 +347,7 @@
      (concat
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
       "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n<channel>\n"
-      "  <title>glocean - writing</title>\n"
+      "  <title>Glocean - writing</title>\n"
       (format "  <link>%s/writing/</link>\n" gl-site-url)
       (format "  <atom:link href=\"%s/feed.xml\" rel=\"self\" type=\"application/rss+xml\"/>\n" gl-site-url)
       "  <description>Glocean's personal blog</description>\n"
