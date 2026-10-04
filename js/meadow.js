@@ -317,6 +317,18 @@
     });
   }
 
+  function rectDist(b, x0, x1, y0, y1) {
+    var dx = Math.max(b[0] - x1, 0, x0 - b[2]), dy = Math.max(b[1] - y1, 0, y0 - b[3]);
+    return Math.hypot(dx, dy);
+  }
+
+  function blocked(b, x, y, N, hx, hy, hr) {
+    var m = b[4] + hash(x * 1.7 + y * 3.1, 5) * 4;
+    if (rectDist(b, hx, hx, hy, hy) < hr + m) return true;
+    var sx = x + 0.58 * N;
+    return rectDist(b, sx, sx, hy + hr, y + N) < 0.25 * N + m * 0.5;
+  }
+
   var TYPE_ORDER = ['five', 'six', 'thirteen'];
 
   function clumps(t, near) {
@@ -363,7 +375,7 @@
     for (var i = 0; i < tries && out.length < target; i++) {
       var p = pos(), x = p[0], y = p[1], N = p[2], fog = p[3];
       var hx = x + 0.45 * N, hy = y + 0.38 * N, hr = 0.34 * N;
-      if (ex.some(function (b) { return x + N > b[0] && x < b[2] && y + N > b[1] && y < b[3]; })) continue;
+      if (ex.some(function (b) { return blocked(b, x, y, N, hx, hy, hr); })) continue;
       if (out.some(function (o) { return Math.hypot(o.hx - hx, o.hy - hy) < (o.hr + hr) * 0.82; })) continue;
       var near = out.filter(function (o) { return Math.hypot(o.hx - hx, o.hy - hy) < (o.hr + hr) * 1.5; });
       var type = pickType(keys[Math.floor(rnd() * keys.length)], near);
@@ -393,10 +405,15 @@
     var u = function (b) {
       return [Math.floor((b.left - rr.left) / 5), Math.floor((b.top - rr.top) / 5), Math.ceil((b.right - rr.left) / 5), Math.ceil((b.bottom - rr.top) / 5)];
     };
-    var els = [el.wmBox, el.nav, el.homeText, el.latest].filter(Boolean);
-    if (el.foot) els = els.concat(Array.prototype.slice.call(el.foot.children));
-    var ex = els.map(function (e) { var b = u(e.getBoundingClientRect()); return [b[0] - 4, b[1] - 4, b[2] + 4, b[3] + 2]; });
-    if (mode === 'horizon' && el.page) { var pb = u(el.page.getBoundingClientRect()); ex.push([pb[0] - 6, pb[1] - 6, pb[2] + 6, pb[3] + 6]); }
+    var rects = [el.wmBox, el.nav].filter(Boolean).map(function (e) { return e.getBoundingClientRect(); });
+    [el.homeText, el.latest].filter(Boolean).forEach(function (e) {
+      var r = document.createRange();
+      r.selectNodeContents(e);
+      rects = rects.concat(Array.prototype.slice.call(r.getClientRects()));
+    });
+    if (el.foot) rects = rects.concat(Array.prototype.slice.call(el.foot.children).map(function (e) { return e.getBoundingClientRect(); }));
+    var ex = rects.filter(function (r) { return r.width && r.height; }).map(function (r) { var b = u(r); b.push(2); return b; });
+    if (mode === 'horizon' && el.page) { var pb = u(el.page.getBoundingClientRect()); pb.push(5); ex.push(pb); }
     if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; cv._c = null; cv._i = null; cv.style.width = W * 5 + 'px'; cv.style.height = H * 5 + 'px'; }
     var key = W + 'x' + H + ':' + ex.join('|');
     if (key !== mKey) { mKey = key; meadow = genMeadow(W, H, ex); }
