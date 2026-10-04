@@ -37,16 +37,45 @@
   };
 
   function rgb(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
-  var base = ['#1f1a24', null, null, null, null, '#a9b8ac', '#4f6356', '#4f6356', '#6b7d71'];
-  function mk(petal, throat, outline, back) {
-    return base.map(function (c, i) { return rgb([null, petal, throat, outline, back][i] || c); });
+  var THEMES = {
+    dark: {
+      ground: '#1f1a24', ink: '#ebe7f0',
+      white: ['#ebe7f0', '#c4b5e3', '#9d8cc4', '#5d5077'],
+      lav: ['#c4b5e3', '#9d8cc4', '#7d6c8f', '#ebe7f0']
+    },
+    light: {
+      ground: '#f1ecf7', ink: '#352c3f',
+      white: ['#c4b5e3', '#9d8cc4', '#8a7aac', '#d8cfea'],
+      lav: ['#a596cc', '#8576b0', '#6c5e8c', '#cbc1e2']
+    }
+  };
+  var sys = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+
+  function currentTheme() {
+    var t = document.documentElement.getAttribute('data-theme');
+    if (t === 'light' || t === 'dark') return t;
+    return sys && sys.matches ? 'light' : 'dark';
   }
-  var pal = { white: mk('#ebe7f0', '#c4b5e3', '#9d8cc4', '#5d5077'), lav: mk('#c4b5e3', '#9d8cc4', '#7d6c8f', '#ebe7f0') };
-  var petalHex = { white: ['#ebe7f0', '#c4b5e3', '#9d8cc4'], lav: ['#c4b5e3', '#9d8cc4', '#7d6c8f'] };
-  var ink = rgb('#ebe7f0');
+
+  var pal, petalHex, ink, themeName;
+  function applyTheme() {
+    var T = THEMES[currentTheme()];
+    if (T === THEMES[themeName]) return;
+    themeName = currentTheme();
+    var base = [T.ground, null, null, null, null, '#a9b8ac', '#4f6356', '#4f6356', '#6b7d71'];
+    var mk = function (c) { return base.map(function (b, i) { return rgb([null, c[0], c[1], c[2], c[3]][i] || b); }); };
+    pal = { white: mk(T.white), lav: mk(T.lav) };
+    petalHex = { white: T.white.slice(0, 3), lav: T.lav.slice(0, 3) };
+    ink = rgb(T.ink);
+    mKey = '';
+    last = 0;
+  }
   var cnt = new Int8Array(12);
 
   var falls = [], meadow = [], mKey = '', last = 0, panic = 0, nextGlance = 0;
+  applyTheme();
+  window.addEventListener('themechange', applyTheme);
+  if (sys && sys.addEventListener) sys.addEventListener('change', applyTheme);
 
   function assign(a, b) { for (var k in b) a[k] = b[k]; return a; }
   function hash(x, s) { var v = Math.sin(x * 12.9898 + s * 78.233) * 43758.5453; return v - Math.floor(v); }

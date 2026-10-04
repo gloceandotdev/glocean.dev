@@ -58,6 +58,49 @@
     requestAnimationFrame(function () { requestAnimationFrame(function () { show(true); }); });
   }
 
+  function initTheme() {
+    var root = document.documentElement;
+    var sys = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+    var btns = Array.prototype.slice.call(document.querySelectorAll('button.theme'));
+
+    function system() { return sys && sys.matches ? 'light' : 'dark'; }
+    function current() {
+      var t = root.getAttribute('data-theme');
+      return t === 'light' || t === 'dark' ? t : system();
+    }
+    function label() {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      btns.forEach(function (b) { b.textContent = next + ' mode'; b.hidden = false; });
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var next = current() === 'dark' ? 'light' : 'dark';
+        if (next === system()) {
+          root.removeAttribute('data-theme');
+          try { localStorage.removeItem('theme'); } catch (e) {}
+        } else {
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+        }
+        label();
+        window.dispatchEvent(new Event('themechange'));
+      });
+    });
+
+    if (sys && sys.addEventListener) sys.addEventListener('change', label);
+    window.addEventListener('pageshow', function (e) {
+      if (!e.persisted) return;
+      var stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (err) {}
+      if (stored === 'light' || stored === 'dark') root.setAttribute('data-theme', stored);
+      else root.removeAttribute('data-theme');
+      label();
+      window.dispatchEvent(new Event('themechange'));
+    });
+    label();
+  }
+
   function initBadgeCopy() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
       var ext = btn.getAttribute('data-copy'), label = btn.textContent, timer;
@@ -115,6 +158,7 @@
 
   function boot() {
     initTransitions();
+    initTheme();
     initBadgeCopy();
     initHexCopy();
     initTagFilter();

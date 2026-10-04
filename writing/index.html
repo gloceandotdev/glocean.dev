@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Glocean - writing</title>
-  <script>document.documentElement.className+=' js';</script>
-  <style>html{color-scheme:dark;background:#1f1a24}</style>
+  <script>(function(){var e=document.documentElement;e.className+=' js';try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')e.setAttribute('data-theme',t);}catch(n){}})();</script>
+  <style>html{color-scheme:dark;background:#1f1a24}@media(prefers-color-scheme:light){html:not([data-theme=dark]){color-scheme:light;background:#f1ecf7}}html[data-theme=light]{color-scheme:light;background:#f1ecf7}</style>
   <meta name="theme-color" content="#c4b5e3">
   <meta property="og:title" content="Glocean - writing">
   <meta property="og:image" content="https://glocean.dev/assets/og.png">
@@ -56,6 +56,7 @@
         <a href="https://github.com/gloceandotdev" target="_blank" rel="noopener">github</a>
         <span class="muted">email</span>
         <a href="/feed.xml">rss</a>
+        <button type="button" class="theme" hidden>light mode</button>
       </footer>
     </div>
 
