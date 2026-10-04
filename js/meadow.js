@@ -317,6 +317,24 @@
     });
   }
 
+  var TYPE_ORDER = ['five', 'six', 'thirteen'];
+
+  function clumps(t, near) {
+    var same = near.filter(function (o) { return o.type === t; });
+    if (same.length >= 2) return true;
+    return same.length === 1 && same[0].nb.some(function (n) { return n.type === t; });
+  }
+
+  function pickType(first, near) {
+    if (!clumps(first, near)) return first;
+    var i = TYPE_ORDER.indexOf(first);
+    for (var k = 1; k < TYPE_ORDER.length; k++) {
+      var t = TYPE_ORDER[(i + k) % TYPE_ORDER.length];
+      if (!clumps(t, near)) return t;
+    }
+    return null;
+  }
+
   function genMeadow(W, H, ex) {
     var s = 11;
     var rnd = function () {
@@ -347,7 +365,10 @@
       var hx = x + 0.45 * N, hy = y + 0.38 * N, hr = 0.34 * N;
       if (ex.some(function (b) { return x + N > b[0] && x < b[2] && y + N > b[1] && y < b[3]; })) continue;
       if (out.some(function (o) { return Math.hypot(o.hx - hx, o.hy - hy) < (o.hr + hr) * 0.82; })) continue;
-      var type = keys[Math.floor(rnd() * keys.length)], T = types[type], lx = rnd() < 0.35 ? { x: 1, y: 0 } : null;
+      var near = out.filter(function (o) { return Math.hypot(o.hx - hx, o.hy - hy) < (o.hr + hr) * 1.5; });
+      var type = pickType(keys[Math.floor(rnd() * keys.length)], near);
+      if (!type) continue;
+      var T = types[type], lx = rnd() < 0.35 ? { x: 1, y: 0 } : null;
       var f = assign(assign({}, T), {
         type: type, N: N, x: x, y: y, hx: hx, hy: hy, hr: hr, cy: 0.36 + rnd() * 0.06, ph: rnd() * 20,
         pg: new Array(T.k).fill(0), def: lx, tgt: lx, until: 0, baseY: y + N - 1
@@ -358,6 +379,8 @@
       for (var k = -3; k <= 3; k++) {
         if (k && rnd() < 0.55) f.blades.push({ x: bx + k, h: 1 + Math.floor(rnd() * (2 + N / 10)), c: rnd() < 0.5 ? 7 : 8, ph: rnd() * 40 });
       }
+      f.nb = near;
+      near.forEach(function (o) { o.nb.push(f); });
       out.push(f);
     }
     return out.sort(function (a, b) { return b.baseY - a.baseY; });
