@@ -160,7 +160,7 @@
   <script>document.documentElement.className+=' js';</script>
   <style>html{color-scheme:dark;background:#1f1a24}</style>
   <meta name=\"theme-color\" content=\"#c4b5e3\">
-  <meta property=\"og:title\" content=\"glocean - %s\">
+  <meta property=\"og:title\" content=\"&#8203;\">
   <meta property=\"og:image\" content=\"https://glocean.dev/assets/og.png\">
   <meta name=\"twitter:card\" content=\"summary_large_image\">
   <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/assets/favicon-32.png\">
@@ -220,7 +220,6 @@
 
 (defun gl-post-html (p)
   (format gl-post-template
-          (gl-esc (plist-get p :title))
           (gl-esc (plist-get p :title))
           (gl-esc (plist-get p :title))
           (gl-post-meta-html p)
