@@ -183,6 +183,7 @@
         <nav class=\"nav\">
           <a class=\"active\" href=\"/writing/\">writing</a>
           <a href=\"/made/\">made</a>
+          <a href=\"/meadow/\">meadow</a>
           <a href=\"/friends/\">friends</a>
           <a href=\"/about/\">about</a>
         </nav>

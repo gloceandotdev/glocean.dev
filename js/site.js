@@ -70,6 +70,19 @@
     });
   }
 
+  function initHexCopy() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-hex]'), function (btn) {
+      var hex = btn.getAttribute('data-hex'), label = btn.querySelector('.hex'), timer;
+      btn.addEventListener('click', function () {
+        try { navigator.clipboard.writeText(hex); } catch (e) {}
+        if (!label) return;
+        label.textContent = 'copied';
+        clearTimeout(timer);
+        timer = setTimeout(function () { label.textContent = hex; }, 1600);
+      });
+    });
+  }
+
   function initTagFilter() {
     var bar = document.querySelector('.filter');
     if (!bar) return;
@@ -103,6 +116,7 @@
   function boot() {
     initTransitions();
     initBadgeCopy();
+    initHexCopy();
     initTagFilter();
   }
 
