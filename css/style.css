@@ -291,6 +291,9 @@ button.theme:focus-visible { outline: 1px solid var(--accent); outline-offset: 4
 .ports { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; }
 .ports a { box-sizing: border-box; display: inline-flex; align-items: center; height: 44px; padding: 0 22px; line-height: 1; border: 1px solid var(--line); }
 .ports a:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+.ports-note { margin-top: 16px; }
+.ports-note a { color: var(--accent); }
+.ports-note a:hover { text-decoration: underline; }
 .v-dark { display: contents; }
 .v-light { display: none; }
 :root[data-theme="light"] .v-dark { display: none; }
