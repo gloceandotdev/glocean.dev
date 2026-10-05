@@ -12,8 +12,8 @@
   --body: #e3dde9;
   --subtle: #b9b0c6;
   --muted: #958aa3;
-  --accent: #c4b5e3;
-  --sage: #a9b8ac;
+  --accent: #c1b0e7;
+  --sage: #a4bba9;
   --line: #3a3245;
   --code: #2a2431;
   --pre: #17131b;
@@ -288,7 +288,9 @@ button.theme:focus-visible { outline: 1px solid var(--accent); outline-offset: 4
 .hex { color: var(--muted); }
 .swatch:hover .hex, .shade:hover .hex { color: var(--accent); }
 .swatch:focus-visible, .shade:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
-.page .ports-empty { margin-top: 20px; }
+.ports { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; }
+.ports a { box-sizing: border-box; display: inline-flex; align-items: center; height: 44px; padding: 0 22px; line-height: 1; border: 1px solid var(--line); }
+.ports a:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
 .v-dark { display: contents; }
 .v-light { display: none; }
 :root[data-theme="light"] .v-dark { display: none; }

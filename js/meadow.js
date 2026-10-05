@@ -40,12 +40,12 @@
   var THEMES = {
     dark: {
       ground: '#1f1a24', ink: '#ebe7f0',
-      white: ['#ebe7f0', '#c4b5e3', '#9d8cc4', '#5d5077'],
-      lav: ['#c4b5e3', '#9d8cc4', '#7d6c8f', '#ebe7f0']
+      white: ['#ebe7f0', '#c1b0e7', '#a192c2', '#5d5077'],
+      lav: ['#c1b0e7', '#a192c2', '#7d6c8f', '#ebe7f0']
     },
     light: {
       ground: '#f1ecf7', ink: '#352c3f',
-      white: ['#c4b5e3', '#9d8cc4', '#8a7aac', '#d8cfea'],
+      white: ['#c1b0e7', '#a192c2', '#8a7aac', '#d8cfea'],
       lav: ['#a596cc', '#8576b0', '#6c5e8c', '#cbc1e2']
     }
   };
@@ -62,7 +62,7 @@
     var T = THEMES[currentTheme()];
     if (T === THEMES[themeName]) return;
     themeName = currentTheme();
-    var base = [T.ground, null, null, null, null, '#a9b8ac', '#4f6356', '#4f6356', '#6b7d71'];
+    var base = [T.ground, null, null, null, null, '#a4bba9', '#4f6356', '#4f6356', '#6b7d71'];
     var mk = function (c) { return base.map(function (b, i) { return rgb([null, c[0], c[1], c[2], c[3]][i] || b); }); };
     pal = { white: mk(T.white), lav: mk(T.lav) };
     petalHex = { white: T.white.slice(0, 3), lav: T.lav.slice(0, 3) };
