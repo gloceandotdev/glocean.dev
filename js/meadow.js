@@ -40,13 +40,13 @@
   var THEMES = {
     dark: {
       ground: '#1f1a24', ink: '#ebe7f0',
-      white: ['#ebe7f0', '#c1b0e7', '#a192c2', '#5d5077'],
-      lav: ['#c1b0e7', '#a192c2', '#7d6c8f', '#ebe7f0']
+      white: ['#ebe7f0', '#c1b0e7', '#a192c2', '#4c4161'],
+      lav: ['#c1b0e7', '#a192c2', '#6b5c79', '#ebe7f0']
     },
     light: {
       ground: '#f1ecf7', ink: '#352c3f',
-      white: ['#c1b0e7', '#a192c2', '#8a7aac', '#d8cfea'],
-      lav: ['#a596cc', '#8576b0', '#6c5e8c', '#cbc1e2']
+      white: ['#c1b0e7', '#a192c2', '#8e80ab', '#d5cbeb'],
+      lav: ['#a99cca', '#897cae', '#5b4f75', '#c8bde4']
     }
   };
   var sys = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
@@ -62,7 +62,7 @@
     var T = THEMES[currentTheme()];
     if (T === THEMES[themeName]) return;
     themeName = currentTheme();
-    var base = [T.ground, null, null, null, null, '#a4bba9', '#4f6356', '#4f6356', '#6b7d71'];
+    var base = [T.ground, null, null, null, null, '#a4bba9', '#3a4d3e', '#3a4d3e', '#556658'];
     var mk = function (c) { return base.map(function (b, i) { return rgb([null, c[0], c[1], c[2], c[3]][i] || b); }); };
     pal = { white: mk(T.white), lav: mk(T.lav) };
     petalHex = { white: T.white.slice(0, 3), lav: T.lav.slice(0, 3) };
