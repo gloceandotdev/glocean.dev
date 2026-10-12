@@ -1,0 +1,64 @@
+#+title: The State of macOS Window Managers
+#+date: <2026-10-12>
+#+filetags: macos
+#+excerpt: All macOS window managers suck in some way. This post should help you decide which one annoys you the least.
+
+* Overview
+
+I have been daily-driving macOS for several years now, and have tried many of the popular window managers available for it. When people ask for guidance on which one they should use, the answer is always "just use the one that annoys you the least, they all suck".
+
+It's not like the developers are at fault here. The people making these tools are extremely talented and it's incredible what they've managed to achieve. macOS was never designed to let a third party app manage your windows, so all of the existing WMs are built around workarounds. Each window manager chooses its own workaround, and each one has its own list of caveats.
+
+I have been running *yabai* for a while now, all my rices rely on it. So keep that in mind while reading this post, it has been written by someone who has spent every day using this window manager.
+
+* Why is this so hard on macOS?
+
+On Linux, the window manager (or Wayland compositor) is a swappable part of the system. On X11 you can just replace it, and in Wayland the window manager is the compositor itself. In either case, their job is to control the windows and decide where they go.
+
+On macOS, all windows belong to the WindowServer, and macOS doesn't give you an easy, public way to talk to it. What you get instead is the following:
+
+** The Accessibility API
+
+This is the public API that is made for accessibility tools like screen readers. This is the primary way window managers move and resize windows. It wasn't meant for this, and it's slow and janky. And not every window behaves the same way: some refuse to be resized (looking at you System Settings) which causes even more problems.
+
+** Spaces
+
+There is no public API for controlling spaces. Creating or destroying a space, moving a window to one, or focusing one is all off limits. You also cannot remove the slow sliding animation when switching between spaces, the closest thing is enabling /Reduce Motion/ in the settings but all it does is replace it with a fade. Workspaces are a huge part of Linux WMs, so not being able to easily control them is detrimental.
+
+So every WM has to make a choice. Inject code into system processes, emulate fake workspaces, or just do everything manually "the macOS way".
+
+* The available options
+
+** yabai
+
+yabai is easily the most powerful WM for macOS. It only really has a BSP layout option, and is configured entirely through shell commands. Because of this it is extremely scriptable and can pair well with custom bars like SketchyBar.
+
+The problem is that to use a lot of the useful features you need to partially disable System Integrity Protection. yabai injects a custom scripting addition into Dock.app, which gives you control over the WindowServer. That in turn allows you to fully control spaces, disable window shadows, and other goodies not available in normal window managers.
+
+But yes, this does mean you are essentially disabling a security feature that comes enabled by default in the OS. Additionally, the project is very very infrequently maintained. macOS 27 has been out for a month and there hasn't been a single word from the maintainer as of now. Pull requests have also been fully disabled, and there still isn't a trusted, active fork out there.
+
+** AeroSpace
+
+The best way to describe AeroSpace is that it is "anti-mac". It refuses to use native spaces, and barely relies on any private APIs. This does mean that it doesn't require you to disable SIP, but the downsides are pretty major.
+
+Firstly, the spaces. It emulates them on top of an existing macOS space. macOS doesn't allow you to fully move windows outside of a screen, so AeroSpace moves the windows from other emulated spaces to the bottom left and right corners of your display. Usually you don't notice it since only 1 pixel of it is visible, but some apps as we already learned act weird when they are resized. This does mean that some windows end up being more visible when "hidden", and since a sliver of each one is still on screen, you can even drag a window out of its corner with your mouse while it's supposed to be on another space.
+
+But that isn't the biggest issue at all. Because of the way AeroSpace spaces are implemented, you *must* have the bottom corners of each display free. That means that multi-monitor setups end up suffering a lot, as even just having two displays on top of one another or side by side means AeroSpace will just not work. This can be circumvented if the displays are different resolutions, but you do usually end up being unable to use AeroSpace if you use multiple monitors.
+
+Additionally, since all windows end up being on a single native macOS space, that results in every window being "active", so you end up using more power too. And oh yeah, scripting with AeroSpace is a pain in the ass.
+
+The maintainer is also very firm about scope. People have been asking for ricing-related changes, different layouts (AeroSpace is strictly a manual tiler), animations, and much more but the maintainer is pretty firm on not allowing these features.
+
+All in all, AeroSpace is really only good if you just wanna get work done and don't wanna disable SIP. But it's overall a pretty hard sell.
+
+** Amethyst
+
+Amethyst has been around for a long time, and it's the neutral option. All it does is just tile your windows, with no fancy features. It has many dynamic tiling options that none of the above have, and a GUI for configuration. It's a nice option for a lot of people, but if you are the type to be reading a niche blog like this you will most likely outgrow it very fast.
+
+** The New Wave
+
+Recently there have been a ton of new window managers coming out, and they all suffer from some of the same problems as the WMs above. Paneru is strictly a scrolling tiler like Niri, and in my eyes the most promising one, but again does not use native spaces like AeroSpace. OmniWM has many layout options, but it feels incredibly janky to use and is largely AI-generated. These have potential, and it's worth keeping an eye on them, but if you're new you should most likely stick with the more mature ones I covered above.
+
+* Conclusion
+
+Every macOS window manager sucks. And they all suck because macOS sucks. macOS was never designed to allow window managers, and the developers deserve a lot more credit than they get. It's really hard trying to get something to work while the OS tries to fight you constantly. This all could change if Apple decides to ship a window management API, but the probability of that happening is close to zero. Until then (if it ever happens), pick the one whose problems bother you the least.

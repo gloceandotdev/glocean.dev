@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glocean - The State of macOS Window Managers</title>
+  <script>(function(){var e=document.documentElement;e.className+=' js';try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')e.setAttribute('data-theme',t);}catch(n){}})();</script>
+  <style>html{color-scheme:dark;background:#1f1a24}@media(prefers-color-scheme:light){html:not([data-theme=dark]){color-scheme:light;background:#f1ecf7}}html[data-theme=light]{color-scheme:light;background:#f1ecf7}</style>
+  <meta name="theme-color" content="#c1b0e7">
+  <meta property="og:title" content="Glocean - The State of macOS Window Managers">
+  <meta property="og:image" content="https://glocean.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png">
+  <link rel="alternate" type="application/rss+xml" title="Glocean - writing" href="/feed.xml">
+  <link rel="preload" href="/fonts/glocean-dot.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-page="post">
+  <div class="root">
+    <canvas class="meadow" aria-hidden="true"></canvas>
+
+    <div class="wrap">
+      <header class="top">
+        <div class="wordmark">
+          <a href="/" aria-label="glocean, home"><canvas width="72" height="18"></canvas></a>
+          <button type="button" aria-label="pick a petal"></button>
+        </div>
+        <nav class="nav">
+          <a class="active" href="/writing/">writing</a>
+          <a href="/made/">made</a>
+          <a href="/meadow/">meadow</a>
+          <a href="/friends/">friends</a>
+          <a href="/about/">about</a>
+        </nav>
+      </header>
+
+      <div class="fade">
+        <main>
+          <article class="post">
+            <h1>The State of macOS Window Managers</h1>
+            <div class="meta"><span>Oct 12, 2026</span><span>6 min read</span><span><a href="/writing/?tag=macos">macos</a></span></div>
+            <div class="prose">
+<h2>Overview</h2>
+<p>
+I have been daily-driving macOS for several years now, and have tried many of the popular window managers available for it. When people ask for guidance on which one they should use, the answer is always "just use the one that annoys you the least, they all suck".
+</p>
+
+<p>
+It's not like the developers are at fault here. The people making these tools are extremely talented and it's incredible what they've managed to achieve. macOS was never designed to let a third party app manage your windows, so all of the existing WMs are built around workarounds. Each window manager chooses its own workaround, and each one has its own list of caveats.
+</p>
+
+<p>
+I have been running <b>yabai</b> for a while now, all my rices rely on it. So keep that in mind while reading this post, it has been written by someone who has spent every day using this window manager.
+</p>
+<h2>Why is this so hard on macOS?</h2>
+<p>
+On Linux, the window manager (or Wayland compositor) is a swappable part of the system. On X11 you can just replace it, and in Wayland the window manager is the compositor itself. In either case, their job is to control the windows and decide where they go.
+</p>
+
+<p>
+On macOS, all windows belong to the WindowServer, and macOS doesn't give you an easy, public way to talk to it. What you get instead is the following:
+</p>
+<h3>The Accessibility API</h3>
+<p>
+This is the public API that is made for accessibility tools like screen readers. This is the primary way window managers move and resize windows. It wasn't meant for this, and it's slow and janky. And not every window behaves the same way: some refuse to be resized (looking at you System Settings) which causes even more problems.
+</p>
+<h3>Spaces</h3>
+<p>
+There is no public API for controlling spaces. Creating or destroying a space, moving a window to one, or focusing one is all off limits. You also cannot remove the slow sliding animation when switching between spaces, the closest thing is enabling <i>Reduce Motion</i> in the settings but all it does is replace it with a fade. Workspaces are a huge part of Linux WMs, so not being able to easily control them is detrimental.
+</p>
+
+<p>
+So every WM has to make a choice. Inject code into system processes, emulate fake workspaces, or just do everything manually "the macOS way".
+</p>
+<h2>The available options</h2>
+<h3>yabai</h3>
+<p>
+yabai is easily the most powerful WM for macOS. It only really has a BSP layout option, and is configured entirely through shell commands. Because of this it is extremely scriptable and can pair well with custom bars like SketchyBar.
+</p>
+
+<p>
+The problem is that to use a lot of the useful features you need to partially disable System Integrity Protection. yabai injects a custom scripting addition into Dock.app, which gives you control over the WindowServer. That in turn allows you to fully control spaces, disable window shadows, and other goodies not available in normal window managers.
+</p>
+
+<p>
+But yes, this does mean you are essentially disabling a security feature that comes enabled by default in the OS. Additionally, the project is very very infrequently maintained. macOS 27 has been out for a month and there hasn't been a single word from the maintainer as of now. Pull requests have also been fully disabled, and there still isn't a trusted, active fork out there.
+</p>
+<h3>AeroSpace</h3>
+<p>
+The best way to describe AeroSpace is that it is "anti-mac". It refuses to use native spaces, and barely relies on any private APIs. This does mean that it doesn't require you to disable SIP, but the downsides are pretty major.
+</p>
+
+<p>
+Firstly, the spaces. It emulates them on top of an existing macOS space. macOS doesn't allow you to fully move windows outside of a screen, so AeroSpace moves the windows from other emulated spaces to the bottom left and right corners of your display. Usually you don't notice it since only 1 pixel of it is visible, but some apps as we already learned act weird when they are resized. This does mean that some windows end up being more visible when "hidden", and since a sliver of each one is still on screen, you can even drag a window out of its corner with your mouse while it's supposed to be on another space.
+</p>
+
+<p>
+But that isn't the biggest issue at all. Because of the way AeroSpace spaces are implemented, you <b>must</b> have the bottom corners of each display free. That means that multi-monitor setups end up suffering a lot, as even just having two displays on top of one another or side by side means AeroSpace will just not work. This can be circumvented if the displays are different resolutions, but you do usually end up being unable to use AeroSpace if you use multiple monitors.
+</p>
+
+<p>
+Additionally, since all windows end up being on a single native macOS space, that results in every window being "active", so you end up using more power too. And oh yeah, scripting with AeroSpace is a pain in the ass.
+</p>
+
+<p>
+The maintainer is also very firm about scope. People have been asking for ricing-related changes, different layouts (AeroSpace is strictly a manual tiler), animations, and much more but the maintainer is pretty firm on not allowing these features.
+</p>
+
+<p>
+All in all, AeroSpace is really only good if you just wanna get work done and don't wanna disable SIP. But it's overall a pretty hard sell.
+</p>
+<h3>Amethyst</h3>
+<p>
+Amethyst has been around for a long time, and it's the neutral option. All it does is just tile your windows, with no fancy features. It has many dynamic tiling options that none of the above have, and a GUI for configuration. It's a nice option for a lot of people, but if you are the type to be reading a niche blog like this you will most likely outgrow it very fast.
+</p>
+<h3>The New Wave</h3>
+<p>
+Recently there have been a ton of new window managers coming out, and they all suffer from some of the same problems as the WMs above. Paneru is strictly a scrolling tiler like Niri, and in my eyes the most promising one, but again does not use native spaces like AeroSpace. OmniWM has many layout options, but it feels incredibly janky to use and is largely AI-generated. These have potential, and it's worth keeping an eye on them, but if you're new you should most likely stick with the more mature ones I covered above.
+</p>
+<h2>Conclusion</h2>
+<p>
+Every macOS window manager sucks. And they all suck because macOS sucks. macOS was never designed to allow window managers, and the developers deserve a lot more credit than they get. It's really hard trying to get something to work while the OS tries to fight you constantly. This all could change if Apple decides to ship a window management API, but the probability of that happening is close to zero. Until then (if it ever happens), pick the one whose problems bother you the least.
+</p>
+            </div>
+            <div class="post-end"><span class="filed">filed under <span><a href="/writing/?tag=macos">macos</a></span></span><a class="accent" href="/writing/">all writing</a></div>
+          </article>
+        </main>
+        <div class="floor" aria-hidden="true"></div>
+      </div>
+
+      <footer class="foot">
+        <a href="https://github.com/gloceandotdev" target="_blank" rel="noopener">github</a>
+        <span class="muted">email</span>
+        <a href="/feed.xml">rss</a>
+        <button type="button" class="theme" hidden>light mode</button>
+      </footer>
+    </div>
+
+    <canvas class="fall" aria-hidden="true"></canvas>
+  </div>
+
+  <script src="/js/meadow.js"></script>
+  <script src="/js/site.js"></script>
+</body>
+</html>
