@@ -44,7 +44,7 @@
       lav: ['#c1b0e7', '#a192c2', '#6b5c79', '#ebe7f0']
     },
     light: {
-      ground: '#f1ecf7', ink: '#352c3f',
+      ground: '#f7e8ee', ink: '#382a3d',
       white: ['#c1b0e7', '#a192c2', '#8e80ab', '#d5cbeb'],
       lav: ['#a99cca', '#897cae', '#5b4f75', '#c8bde4']
     }
