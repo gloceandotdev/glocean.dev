@@ -265,6 +265,7 @@ button.theme:focus-visible { outline: 1px solid var(--accent); outline-offset: 4
 .col { display: flex; flex-direction: column; }
 .col-label { color: var(--accent); padding-bottom: 12px; }
 .col-item { padding: 12px 0; border-top: 1px solid var(--line); line-height: 1.35; }
+.about-mail { margin-top: 56px; }
 
 .pal-actions { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
 .pal-actions .btn { color: var(--accent); }
